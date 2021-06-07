@@ -47,7 +47,7 @@ class BaseEnv(gym.Env):
         for folder in robot_folders:
             self.robot.append(os.path.join(robot_dir, folder))
 
-        self.dir2id = {folder: idx for idx, folder in emumerate(self.robots)}
+        self.dir2id = {folder: idx for idx, folder in enumerate(self.robots)}
         self.robot_num = len(self.robots)
         
         if train:
@@ -104,8 +104,12 @@ class BaseEnv(gym.Env):
     def reset_robot(self, robot_id):
         self.robot_folder_id = self.dir2id[self.robots[robot_id]]
         robot_file = os.path.join(self.robots[robot_id], 'model.urdf')
-        self.sim = p.loadURDF(robot_file)
+        p.resetSimulation(self.physics_client)
+        arm_base_pose = [0,0,0]
+        plane_pose = [0,0,-.01]
+        self.sim = p.loadURDF(robot_file,arm_base_pose,self.physics_client)
         self.sim_urdf = URDF.load(robot_file)
+        self.plane = p.loadURDF.load('assets/plane.urdf',plane_pose,self.physics_client)
         self.update_action_space()
     
     def test_reset(self, cond):
@@ -122,7 +126,7 @@ class BaseEnv(gym.Env):
             done = True
             reward_dist = 1
         else:
-            done = Flase
+            done = False
             reward_dist = -1
         reward = reward_dist
         reward -= 0.1 * np.square(a).sum()
@@ -132,7 +136,7 @@ class BaseEnv(gym.Env):
         qpos = self.get_qpos(self.sim)
         qvel = self.get_qvel(self.sim)
 
-        ob = concatenate([qpos,qvel])
+        ob = np.concatenate([qpos,qvel])
         if self.with_dyn:
             dyn_vec = self.get_dyn(self.sim_urdf)
             dyn_vec = np.divide((dyn_vec - self.dyn_min),

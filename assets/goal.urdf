@@ -1,0 +1,17 @@
+<robot name="goal">
+    <link name="goal">
+        <visual>
+        <geometry>
+            <sphere radius=".05"/>
+        </geometry>
+        <material name="yellow">
+            <color rgba="240 255 0 1"/>
+        </material>
+        </visual>
+        <inertial>
+        <mass value="0"/>
+        <origin rpy="0 0 0" xyz="0.0 0.0 -0.1"/>
+        <inertia ixx="0" ixy="0.0" ixz="0.0" iyy="0" iyz="0.0" izz="0"/>
+        </inertial>
+    </link>
+</robot>
