@@ -62,7 +62,7 @@ class ReacherEnv(BaseEnv):
         return ob, reward, done, info
             
     def gen_random_goal(self):
-        radius = np.random.uniform(0,1.5)
+        radius = np.random.uniform(0,0.75)
         theta = np.random.uniform(0,2)*np.pi
         phi = np.random.uniform(0,1)*np.pi
         x = radius*np.cos(theta)*np.sin(phi)

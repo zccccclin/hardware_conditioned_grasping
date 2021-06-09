@@ -102,10 +102,10 @@ if __name__ == "__main__":
     parser.add_argument('--random_seed', '-rs', type=int, default=1,
                         help='seed for random number')
     parser.add_argument('--ref_urdf', '-ru', type=str,
-                        default='assets/barrett_hand/model.urdf',
+                        default='assets/ur5_w_gripper/model.urdf',
                         help='reference robot urdf file')
     parser.add_argument('--save_dir', '-sd', type=str,
-                        default='assets/generated/barrett_hand',
+                        default='assets/generated/ur5_w_gripper',
                         help='save directory for generated models')
     args = parser.parse_args()
     np.random.seed(seed=args.random_seed)

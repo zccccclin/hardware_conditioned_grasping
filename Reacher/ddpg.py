@@ -23,7 +23,7 @@ class DDPG:
         goal_dim = env.goal_dim
         ob_dim = ob_space.shape[0]
         self.ob_dim = ob_dim
-        self.ac_dim = ac_dim = 7
+        self.ac_dim = ac_dim = 6
         self.goal_dim = goal_dim
         self.num_iters = args.num_iters
         self.random_prob = args.random_prob
