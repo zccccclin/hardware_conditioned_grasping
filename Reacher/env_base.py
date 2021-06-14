@@ -165,13 +165,17 @@ class BaseEnv:
         return ob, ref_point
 
     def get_qpos(self, sim):
-        qpos = p.getBasePositionAndOrientation(sim)
-        qpos = np.hstack(qpos)
+        num_dofs = 6
+        joint_indices = range(num_dofs)
+        joint_states = p.getJointStates(sim, joint_indices)
+        qpos = np.array([j[0] for j in joint_states])
         return qpos
 
     def get_qvel(self, sim):
-        qvel = p.getBaseVelocity(sim)
-        qvel = np.hstack(qvel)
+        num_dofs = 6
+        joint_indices = range(num_dofs)
+        joint_states = p.getJointStates(sim, joint_indices)
+        qvel = np.array([j[1] for j in joint_states])
         return qvel
 
 

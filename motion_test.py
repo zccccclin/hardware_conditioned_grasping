@@ -25,12 +25,16 @@ def main():
         controlMode=p.VELOCITY_CONTROL,
         forces=np.zeros(num_dofs),
     )
+    
 
     while True:
         time.sleep(0.01)
 
         joint_states = p.getJointStates(robot_id, joint_indices)
+
         joint_positions = np.array([j[0] for j in joint_states])
+        print(joint_positions)
+
         error = desired_joint_positions - joint_positions
         torque = error * P_GAIN
 

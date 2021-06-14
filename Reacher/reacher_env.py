@@ -57,7 +57,7 @@ class ReacherEnv(BaseEnv):
         )
         p.stepSimulation()
         if self.testing:
-            time.sleep(0.01)
+            time.sleep(0.1)
         '''
         for idx in range(6):
             p.setJointMotorControl2(self.sim, idx, p.POSITION_CONTROL,
