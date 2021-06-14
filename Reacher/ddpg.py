@@ -151,6 +151,7 @@ class DDPG:
                 new_obs = new_obs[0].copy()
                 episode_reward += r
                 episode_step += 1
+                print(total_rollout_steps,episode_step)
                 self.memory.append(obs, act, r * self.reward_scale,
                                    new_obs, ach_goals, done)
                 if self.use_her:

@@ -23,15 +23,18 @@ class ReacherEnv(BaseEnv):
                          train=train,
                          with_dyn=with_dyn,
                          multi_goal=multi_goal)
-    def reset(self,  goal_pose=None, robot_id=None):
+    def reset(self): #,goal_pose=None, robot_id=None):
+        '''
         if  goal_pose is None:
             goal_pose = self.gen_random_goal()
         if robot_id is None:
             self.robot_id = np.random.randint(0, self.train_robot_num, 1)[0]
         else:
             self.robot_id = robot_id
-        self.reset_robot(self.robot_id, goal_pose)\
-                        
+        self.reset_robot(self.robot_id, goal_pose)
+
+        '''
+        self.reset_robot()
         ob = self.get_obs()
         self.ep_reward = 0
         self.ep_len =  0
@@ -39,11 +42,28 @@ class ReacherEnv(BaseEnv):
         
     def step(self, action):
         scaled_action = self.scale_action(action[:6])
+        joint_indices =  range(6)
+        p.setJointMotorControlArray(
+            bodyIndex=self.sim,
+            jointIndices=joint_indices,
+            controlMode=p.VELOCITY_CONTROL,
+            forces=np.zeros(6),
+        )
+        p.setJointMotorControlArray(
+            bodyIndex=self.sim,
+            jointIndices=joint_indices,
+            controlMode=p.TORQUE_CONTROL,
+            forces=scaled_action,
+        )
+        p.stepSimulation()
+        if self.testing:
+            time.sleep(0.01)
+        '''
         for idx in range(6):
             p.setJointMotorControl2(self.sim, idx, p.POSITION_CONTROL,
                                     targetPosition=action[idx])
-        for steps in range(10):
-            p.stepSimulation()
+        '''
+
         #time.sleep(0)
 
             #if self.testing:

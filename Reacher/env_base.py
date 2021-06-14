@@ -44,14 +44,14 @@ class BaseEnv:
             self.robots.append(os.path.join(robot_dir, folder))
 
         self.dir2id = {folder: idx for idx, folder in enumerate(self.robots)}
-        self.robot_num = len(self.robots)
+        self.robot_num = 1#len(self.robots)
         
         if train:
-            self.test_robot_num = min(100, self.robot_num)
+            self.test_robot_num = 1 #min(100, self.robot_num)
             self.train_robot_num = self.robot_num - self.test_robot_num
             self.test_robot_ids = list(range(self.train_robot_num,
                                              self.robot_num))
-            self.train_test_robot_num = min(100, self.train_robot_num)
+            self.train_test_robot_num = 1 #min(100, self.train_robot_num)
             self.train_test_robot_ids = list(range(self.train_test_robot_num))
             self.train_test_conditions = self.train_test_robot_num
         else:
@@ -65,7 +65,7 @@ class BaseEnv:
         print('Train robots: ', self.train_robot_num)
         print('Test robots: ', self.test_robot_num)
         print('Multi goal:', self.multi_goal)
-        self.reset_robot(0, None)
+        self.reset_robot()#0, None)
 
         self.ob_dim = self.get_obs()[0].size
         print('Ob dim: ', self.ob_dim)
@@ -88,17 +88,24 @@ class BaseEnv:
         valid_joints = 6
         #for getting num of actuator joint including gripper
         #valid_joints = len(self.model_urdf.actuated_joints)
+        '''
         bounds = self.sim_urdf.joint_limits[:valid_joints]
         self.ctrl_low = np.copy(bounds[:,0])
         self.ctrl_high = np.copy(bounds[:,1])
         self.action_space = spaces.Box(self.ctrl_low, self.ctrl_high, dtype=np.float32)
+        '''
+        self.ctrl_low = np.array([-80,-80,-40,-40,-9,-9])
+        self.ctrl_high = np.array([80,80,40,40,9,9])
+        self.action_space = spaces.Box(self.ctrl_low, self.ctrl_high, dtype=np.float32)
+
 
     def scale_action(self, action):
         act_k = (self.action_space.high - self.action_space.low)/2.
         act_b = (self.action_space.high + self.action_space.low)/2.
         return act_k * action + act_b
 
-    def reset_robot(self, robot_id, goal_pose):
+    def reset_robot(self): #, robot_id, goal_pose):
+        '''
         self.robot_folder_id = self.dir2id[self.robots[robot_id]]
         robot_file = os.path.join(self.robots[robot_id], 'model.urdf')
         p.resetSimulation()
@@ -110,14 +117,25 @@ class BaseEnv:
         if goal_pose is not None:
             self.goal = p.loadURDF('../assets/goal.urdf', basePosition=goal_pose, physicsClientId=self.pc._client)
         self.update_action_space()
-    
+        '''
+
+        robot_file = '../assets/generated/ur5_w_gripper/robot_0/model.urdf'
+        p.resetSimulation()
+        arm_base_pose = [0,0,0]
+        plane_pose = [0,0,-.01]
+        self.sim = p.loadURDF(robot_file, basePosition=arm_base_pose, useFixedBase=1, physicsClientId=self.pc._client)
+        self.sim_urdf = URDF.load(robot_file)
+        self.plane = p.loadURDF('../assets/plane.urdf', basePosition=plane_pose, physicsClientId=self.pc._client)
+        self.goal = p.loadURDF('../assets/goal.urdf', basePosition=[.5,.5,.5], physicsClientId=self.pc._client)
+        self.update_action_space()
+
     def test_reset(self, cond):
         robot_id = self.test_robot_ids[cond]
-        return self.reset(robot_id=robot_id)
+        return self.reset() #robot_id=robot_id)
 
     def train_test_reset(self, cond):
         robot_id = self.train_test_robot_ids[cond]
-        return self.reset(robot_id=robot_id)
+        return self.reset() #robot_id=robot_id)
 
     def cal_reward(self, s, goal, a):
         dist = np.linalg.norm(s - goal) 
