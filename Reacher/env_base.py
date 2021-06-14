@@ -54,6 +54,7 @@ class BaseEnv:
             self.train_test_robot_num = 1 #min(100, self.train_robot_num)
             self.train_test_robot_ids = list(range(self.train_test_robot_num))
             self.train_test_conditions = self.train_test_robot_num
+            self.testing = False
         else:
             self.test_robot_num = self.robot_num
             self.train_robot_num = self.robot_num - self.test_robot_num
