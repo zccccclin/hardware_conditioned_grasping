@@ -78,7 +78,7 @@ class ReacherEnv(BaseEnv):
         phi = np.random.uniform(0,1)*np.pi
         x = radius*np.cos(theta)*np.sin(phi)
         y = radius*np.sin(theta)*np.cos(phi)
-        z = np.abs(radius*np.cos(phi))
+        z = radius*np.cos(phi)
         xyz = np.array([x,y,z])
         return xyz
 
