@@ -109,10 +109,10 @@ class BaseEnv:
         arm_base_pose = [0,0,0]
         plane_pose = [0,0,-.01]
         self.sim = p.loadURDF(robot_file, basePosition=arm_base_pose, useFixedBase=1, physicsClientId=self.pc._client)
-        self.sim_urdf = URDF.load(robot_file)
-        self.plane = p.loadURDF('../assets/plane.urdf', basePosition=plane_pose, physicsClientId=self.pc._client)
-        if goal_pose is not None:
-            self.goal = p.loadURDF('../assets/goal.urdf', basePosition=goal_pose, physicsClientId=self.pc._client)
+        #self.sim_urdf = URDF.load(robot_file)
+        #self.plane = p.loadURDF('../assets/plane.urdf', basePosition=plane_pose, physicsClientId=self.pc._client)
+        goal_pose = goal_pose if goal_pose is not None else [0,0,0]
+        self.goal = p.loadURDF('../assets/goal.urdf', basePosition=goal_pose, physicsClientId=self.pc._client) 
         self.update_action_space()
         
         '''
@@ -159,7 +159,7 @@ class BaseEnv:
             ob = np.concatenate([ob, dyn_vec])
             
         target = np.array(p.getBasePositionAndOrientation(self.goal)[0])
-        np.concatenate(ob, target)
+        ob = np.concatenate([ob, target])
         
         ref_point = np.array(p.getLinkState(self.sim,6)[0])
         return ob, ref_point
