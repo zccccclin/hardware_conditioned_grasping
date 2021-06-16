@@ -109,8 +109,8 @@ class BaseEnv:
         arm_base_pose = [0,0,0]
         plane_pose = [0,0,-.01]
         self.sim = p.loadURDF(robot_file, basePosition=arm_base_pose, useFixedBase=1, 
-                              physicsClientId=self.pc._client, URDF_USE_SELF_COLLISION, 
-                              URDF_USE_SELF_COLLISION_INCLUDE_PARENT)
+                              physicsClientId=self.pc._client,flags=p.URDF_USE_SELF_COLLISION | 
+                              p.URDF_USE_SELF_COLLISION_INCLUDE_PARENT)
         #self.sim_urdf = URDF.load(robot_file)
         #self.plane = p.loadURDF('../assets/plane.urdf', basePosition=plane_pose, physicsClientId=self.pc._client)
         goal_pose = goal_pose if goal_pose is not None else [0,0,0]
