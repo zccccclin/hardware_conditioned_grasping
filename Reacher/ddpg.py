@@ -410,9 +410,9 @@ class DDPG:
             print("Third quartile: {0:9.4f}"
                   "".format(np.percentile(final_dist, 75)))
             print('Success rate:', succ_rate)
-        if render:
-            while True:
-                self.env.render()
+        #if render:
+            #while True:
+                #self.env.render()
         return mean_final_dist, succ_rate
 
     def log_model_weights(self):

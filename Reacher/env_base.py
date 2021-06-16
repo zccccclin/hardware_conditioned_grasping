@@ -108,7 +108,9 @@ class BaseEnv:
         p.resetSimulation()
         arm_base_pose = [0,0,0]
         plane_pose = [0,0,-.01]
-        self.sim = p.loadURDF(robot_file, basePosition=arm_base_pose, useFixedBase=1, physicsClientId=self.pc._client)
+        self.sim = p.loadURDF(robot_file, basePosition=arm_base_pose, useFixedBase=1, 
+                              physicsClientId=self.pc._client, URDF_USE_SELF_COLLISION, 
+                              URDF_USE_SELF_COLLISION_INCLUDE_PARENT)
         #self.sim_urdf = URDF.load(robot_file)
         #self.plane = p.loadURDF('../assets/plane.urdf', basePosition=plane_pose, physicsClientId=self.pc._client)
         goal_pose = goal_pose if goal_pose is not None else [0,0,0]
@@ -136,7 +138,8 @@ class BaseEnv:
         return self.reset(robot_id=robot_id)
 
     def cal_reward(self, s, goal, a):
-        dist = np.linalg.norm(s - goal) 
+        dist = np.linalg.norm(s - goal)
+
         if dist < self.dist_tol:
             done = True
             reward_dist = 1

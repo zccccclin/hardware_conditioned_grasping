@@ -23,8 +23,8 @@ class ReacherEnv(BaseEnv):
                          train=train,
                          with_dyn=with_dyn,
                          multi_goal=multi_goal)
+
     def reset(self, goal_pose=None, robot_id=None): #):
-        
         if  goal_pose is None:
             goal_pose = self.gen_random_goal()
         if robot_id is None:
@@ -33,7 +33,6 @@ class ReacherEnv(BaseEnv):
             self.robot_id = robot_id
         self.reset_robot(self.robot_id, goal_pose)
 
-        
         #self.reset_robot()
         ob = self.get_obs()
         self.ep_reward = 0
@@ -57,7 +56,7 @@ class ReacherEnv(BaseEnv):
         )
         p.stepSimulation()
         if self.testing:
-            time.sleep(0.1)
+            time.sleep(0.05)
 
 
         ob = self.get_obs()
@@ -73,7 +72,7 @@ class ReacherEnv(BaseEnv):
         return ob, reward, done, info
             
     def gen_random_goal(self):
-        radius = np.random.uniform(0,0.75)
+        radius = np.random.uniform(0.3,0.75)
         theta = np.random.uniform(0,2)*np.pi
         phi = np.random.uniform(0,1)*np.pi
         x = radius*np.cos(theta)*np.sin(phi)
