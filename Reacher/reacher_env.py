@@ -54,9 +54,10 @@ class ReacherEnv(BaseEnv):
             controlMode=p.TORQUE_CONTROL,
             forces=scaled_action,
         )
-        p.stepSimulation()
-        if self.testing:
-            time.sleep(0.05)
+        for i in range(20):
+            p.stepSimulation()
+            if self.testing:
+                time.sleep(0.05)
 
 
         ob = self.get_obs()
