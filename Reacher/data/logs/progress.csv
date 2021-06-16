@@ -1,0 +1,7 @@
+rollout/return,actor_lr,rollout/ep_steps,total_rollout_steps,critic_lr,time_elapsed,epoch
+-240.6920564508497,0.0001,200.0,200,0.0001,1.9348301887512207,
+rollout/return,actor_lr,rollout/ep_steps,total_rollout_steps,critic_lr,time_elapsed,epoch,train/succ_rate,test/total_rollout_steps,test/mean_final_dist,train/mean_final_dist,test/succ_rate
+-240.6920564508497,0.0001,200.0,200,0.0001,1.9348301887512207,,,,,,
+,,,,,,,,200,0.7243263083653116,0.8105731087353758,
+-241.47240989510752,0.0001,200.0,400,0.0001,28.90177011489868,1,,,,,
+-241.31453701607614,0.0001,200.0,600,0.0001,30.30801224708557,2,,,,,

@@ -33,7 +33,6 @@ class ReacherEnv(BaseEnv):
             self.robot_id = robot_id
         self.reset_robot(self.robot_id, goal_pose)
 
-        #self.reset_robot()
         ob = self.get_obs()
         self.ep_reward = 0
         self.ep_len =  0
@@ -54,11 +53,9 @@ class ReacherEnv(BaseEnv):
             controlMode=p.TORQUE_CONTROL,
             forces=scaled_action,
         )
-        for i in range(20):
-            p.stepSimulation()
-            if self.testing:
-                time.sleep(0.05)
-
+        p.stepSimulation()
+        if self.testing:
+            time.sleep(0.05)
 
         ob = self.get_obs()
         re_target = np.array(p.getBasePositionAndOrientation(self.goal)[0])
@@ -73,12 +70,9 @@ class ReacherEnv(BaseEnv):
         return ob, reward, done, info
             
     def gen_random_goal(self):
-        radius = np.random.uniform(0.3,0.75)
-        theta = np.random.uniform(0,2)*np.pi
-        phi = np.random.uniform(0,1)*np.pi
-        x = radius*np.cos(theta)*np.sin(phi)
-        y = radius*np.sin(theta)*np.cos(phi)
-        z = radius*np.cos(phi)
+        x = np.random.uniform(0.3,0.8)
+        y = np.random.uniform(-0.3,0.3)
+        z = np.random.uniform(0.2,0.6)
         xyz = np.array([x,y,z])
         return xyz
 

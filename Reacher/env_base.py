@@ -9,6 +9,8 @@ import pybullet as p
 from pybullet_utils import bullet_client
 from urdfpy import  URDF
 from util import rotations
+import pybullet_data
+
 
 class BaseEnv:
 
@@ -38,6 +40,8 @@ class BaseEnv:
         self.spec = None
         self.dist_tol = tol
         self.pc = bullet_client.BulletClient(p.GUI if render else p.DIRECT)
+        p.setAdditionalSearchPath(pybullet_data.getDataPath())
+        p.setGravity(0,0,-9.81)
 
         self.robots = []
         for folder in robot_folders:
@@ -85,14 +89,13 @@ class BaseEnv:
         raise NotImplementedError
 
     def update_action_space(self):
-        #for 6 axis arm joints only
         valid_joints = 6
         #for getting num of actuator joint including gripper
         #valid_joints = len(self.model_urdf.actuated_joints)
 
         #torque range array
-        self.ctrl_low = np.array([-80,-80,-40,-40,-9,-9])
-        self.ctrl_high = np.array([80,80,40,40,9,9])
+        self.ctrl_low = np.array([-100,-80,-50,-50,-15,-15])
+        self.ctrl_high = np.array([100,80,50,50,15,15])
         self.action_space = spaces.Box(self.ctrl_low, self.ctrl_high, dtype=np.float32)
 
 
@@ -107,27 +110,15 @@ class BaseEnv:
         robot_file = os.path.join(self.robots[robot_id], 'model.urdf')
         p.resetSimulation()
         arm_base_pose = [0,0,0]
-        plane_pose = [0,0,-.01]
         self.sim = p.loadURDF(robot_file, basePosition=arm_base_pose, useFixedBase=1, 
                               physicsClientId=self.pc._client,flags=p.URDF_USE_SELF_COLLISION | 
                               p.URDF_USE_SELF_COLLISION_INCLUDE_PARENT)
         #self.sim_urdf = URDF.load(robot_file)
         #self.plane = p.loadURDF('../assets/plane.urdf', basePosition=plane_pose, physicsClientId=self.pc._client)
+        self.plane = p.loadURDF("plane.urdf")
         goal_pose = goal_pose if goal_pose is not None else [0,0,0]
         self.goal = p.loadURDF('../assets/goal.urdf', basePosition=goal_pose, physicsClientId=self.pc._client) 
         self.update_action_space()
-        
-        '''
-        robot_file = '../assets/generated/ur5_w_gripper/robot_0/model.urdf'
-        p.resetSimulation()
-        arm_base_pose = [0,0,0]
-        plane_pose = [0,0,-.01]
-        self.sim = p.loadURDF(robot_file, basePosition=arm_base_pose, useFixedBase=1, physicsClientId=self.pc._client)
-        self.sim_urdf = URDF.load(robot_file)
-        self.plane = p.loadURDF('../assets/plane.urdf', basePosition=plane_pose, physicsClientId=self.pc._client)
-        self.goal = p.loadURDF('../assets/goal.urdf', basePosition=[.5,.5,.5], physicsClientId=self.pc._client)
-        self.update_action_space()
-        '''
 
     def test_reset(self, cond):
         robot_id = self.test_robot_ids[cond]
