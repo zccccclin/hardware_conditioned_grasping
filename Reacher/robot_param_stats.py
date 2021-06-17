@@ -5,10 +5,8 @@ from datetime import datetime
 from networkx.algorithms.smallworld import sigma
 
 import numpy as np
-from urdfpy import URDF
+import pybullet as p
 from tqdm import tqdm
-from urdfpy.utils import parse_origin
-
 from util import rotations
 
 
@@ -25,13 +23,15 @@ def get_obs(model, act_dim, type='dyn'):
 
 def get_dyn(sim, act_dim):
     body_mass = []
-    for link in sim.links:
-        body_mass.append(link.inertial.mass)
+    link_indices = range(-1,7)
+    for link in link_indices:
+        body_mass.append(p.getDynamicsInfo(sim,link)[0])
     friction = []
     damping = []
     for joint_num in range(act_dim):
-        friction.append(sim.joints[joint_num].dynamics.friction)
-        damping.append(sim.joints[joint_num].dynamics.damping)
+        damping.append(p.getJointInfo(sim,joint_num)[6])
+        friction.append(p.getJointInfo(sim,joint_num)[7])
+        
     dyn_vec = np.concatenate((np.asarray(body_mass), 
                         np.asarray(friction), 
                         np.asarray(damping)))
@@ -54,11 +54,13 @@ if __name__ == "__main__":
 
     robot_folders = os.listdir(args.robot_dir)
     vecs = []
+    pc = p.connect(p.DIRECT)
     for robot_folder in tqdm(robot_folders):
+        p.resetSimulation()
         robot_file = os.path.join(args.robot_dir,
                                   robot_folder,
                                   'model.urdf')
-        model = URDF.load(robot_file)
+        model = p.loadURDF(robot_file)
         act_dim = 6
         vecs.append(get_obs(model, act_dim, type=args.type))
     vecs = np.array(vecs)

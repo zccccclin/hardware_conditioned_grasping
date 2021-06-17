@@ -7,7 +7,6 @@ import gym
 from gym import spaces
 import pybullet as p
 from pybullet_utils import bullet_client
-from urdfpy import  URDF
 from util import rotations
 import pybullet_data
 
@@ -29,12 +28,12 @@ class BaseEnv:
 
         if self.with_dyn:
             normal_file = os.path.join(robot_dir, 'stats/dyn_stats.json')
-            with open(norm_file, 'r') as f:
+            with open(normal_file, 'r') as f:
                 stats = json.load(f)
-            self.dyn_mu = np.array(stats['mu'].reshape(-1))
-            self.dyn_signma = np.array(stats['sigma']).reshape(-1)
-            self.dyn_min = np.array(stats['min']).reshape(-1)
-            self.dyn_max = np.array(stats['max']).reshape(-1)
+            self.dyn_mu = np.array(np.array(stats['mu']).reshape(-1))
+            self.dyn_signma = np.array(np.array(stats['sigma'])).reshape(-1)
+            self.dyn_min = np.array(np.array(stats['min'])).reshape(-1)
+            self.dyn_max = np.array(np.array(stats['max'])).reshape(-1)
         
         self.reward_range = (-np.inf, np.inf)
         self.spec = None
@@ -113,7 +112,6 @@ class BaseEnv:
         self.sim = p.loadURDF(robot_file, basePosition=arm_base_pose, useFixedBase=1, 
                               physicsClientId=self.pc._client,flags=p.URDF_USE_SELF_COLLISION | 
                               p.URDF_USE_SELF_COLLISION_INCLUDE_PARENT)
-        #self.sim_urdf = URDF.load(robot_file)
         #self.plane = p.loadURDF('../assets/plane.urdf', basePosition=plane_pose, physicsClientId=self.pc._client)
         self.plane = p.loadURDF("plane.urdf")
         goal_pose = goal_pose if goal_pose is not None else [0,0,0]
@@ -147,7 +145,7 @@ class BaseEnv:
 
         ob = np.concatenate([qpos,qvel])
         if self.with_dyn:
-            dyn_vec = self.get_dyn(self.sim_urdf)
+            dyn_vec = self.get_dyn(self.sim)
             dyn_vec = np.divide((dyn_vec - self.dyn_min),
                                 self.dyn_max - self.dyn_min)
             ob = np.concatenate([ob, dyn_vec])
@@ -183,13 +181,14 @@ class BaseEnv:
 
     def get_dyn(self, sim):
         body_mass = []
-        for link in sim.links:
-            body_mass.append(link.inertial.mass)
+        link_indices = range(-1,7)
+        for link in link_indices:
+            body_mass.append(p.getDynamicsInfo(sim,link)[0])
         friction = []
         damping = []
-        for joint in sim.joints:
-            friction.append(joint.dynamics.friction)
-            damping.append(joint.dynamics.damping)
+        for joint_num in range(6):
+            damping.append(p.getJointInfo(sim,joint_num)[6])
+            friction.append(p.getJointInfo(sim,joint_num)[7])
         dyn_vec = np.concatenate((np.asarray(body_mass), 
                         np.asarray(friction), 
                         np.asarray(damping)))
