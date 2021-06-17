@@ -122,7 +122,7 @@ def main():
                         help='maximum gradient norm in back-propagation')
     parser.add_argument('--robot_dir', type = str,
                         default='../assets/generated/ur5_w_gripper')
-    parser.add_argument('--train_ratio', type=float, default=0.8,
+    parser.add_argument('--train_ratio', type=float, default=0.9,
                         help='ratio of training robots')
     parser.add_argument('--save_dir', type=str, default='./data')
     parser.add_argument('--test', action='store_true', help='test mode')

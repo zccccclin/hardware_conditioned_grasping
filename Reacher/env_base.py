@@ -50,11 +50,11 @@ class BaseEnv:
         self.robot_num = len(self.robots)
         
         if train:
-            self.test_robot_num = min(10, self.robot_num)
+            self.test_robot_num = min(100, self.robot_num)
             self.train_robot_num = self.robot_num - self.test_robot_num
             self.test_robot_ids = list(range(self.train_robot_num,
                                              self.robot_num))
-            self.train_test_robot_num = min(10, self.train_robot_num)
+            self.train_test_robot_num = min(100, self.train_robot_num)
             self.train_test_robot_ids = list(range(self.train_test_robot_num))
             self.train_test_conditions = self.train_test_robot_num
             self.testing = False
@@ -184,7 +184,6 @@ class BaseEnv:
         link_indices = range(0,6)
         for link in link_indices:
             body_mass.append(p.getDynamicsInfo(sim,link)[0])
-        print(body_mass)
         friction = []
         damping = []
         for joint_num in range(6):
