@@ -27,7 +27,7 @@ class BaseEnv:
         self.goal_dim = 3
 
         if self.with_dyn:
-            normal_file = os.path.join(robot_dir, 'stats/dyn_stats.json')
+            normal_file = 'stats/dyn_stats.json'
             with open(normal_file, 'r') as f:
                 stats = json.load(f)
             self.dyn_mu = np.array(np.array(stats['mu']).reshape(-1))
