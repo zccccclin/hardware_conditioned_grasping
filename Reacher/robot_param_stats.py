@@ -23,7 +23,7 @@ def get_obs(model, act_dim, type='dyn'):
 
 def get_dyn(sim, act_dim):
     body_mass = []
-    link_indices = range(-1,7)
+    link_indices = range(0,6)
     for link in link_indices:
         body_mass.append(p.getDynamicsInfo(sim,link)[0])
     friction = []

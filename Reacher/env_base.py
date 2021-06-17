@@ -181,9 +181,10 @@ class BaseEnv:
 
     def get_dyn(self, sim):
         body_mass = []
-        link_indices = range(-1,7)
+        link_indices = range(0,6)
         for link in link_indices:
             body_mass.append(p.getDynamicsInfo(sim,link)[0])
+        print(body_mass)
         friction = []
         damping = []
         for joint_num in range(6):
