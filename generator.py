@@ -32,8 +32,8 @@ def robot_param_random_sample(robot, pre_gen_params, vars_to_change):
             link.inertial.mass *= vbmass
 
 def get_variable_params():
-    vars_dict = {'damping_range': [0.01,150],
-                 'friction_range': [0,2],
+    vars_dict = {'damping_range': [0.01,30],
+                 'friction_range': [0,10],
                  'mass_ratio': [0.25, 2]}
     return vars_dict
 

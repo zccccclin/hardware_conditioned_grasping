@@ -50,11 +50,11 @@ class BaseEnv:
         self.robot_num = len(self.robots)
         
         if train:
-            self.test_robot_num = min(100, self.robot_num)
+            self.test_robot_num = min(50, self.robot_num)
             self.train_robot_num = self.robot_num - self.test_robot_num
             self.test_robot_ids = list(range(self.train_robot_num,
                                              self.robot_num))
-            self.train_test_robot_num = min(100, self.train_robot_num)
+            self.train_test_robot_num = min(50, self.train_robot_num)
             self.train_test_robot_ids = list(range(self.train_test_robot_num))
             self.train_test_conditions = self.train_test_robot_num
             self.testing = False
@@ -93,14 +93,16 @@ class BaseEnv:
         #valid_joints = len(self.model_urdf.actuated_joints)
 
         #torque range array
-        self.ctrl_low = np.array([-100,-80,-50,-50,-15,-15])
-        self.ctrl_high = np.array([100,80,50,50,15,15])
+        #[100,80,50,50,15,15]
+        self.ctrl_low = np.array([-500,-500,-500,-500,-500,-500])
+        self.ctrl_high = np.array([500,500,500,500,500,500])
         self.action_space = spaces.Box(self.ctrl_low, self.ctrl_high, dtype=np.float32)
 
 
     def scale_action(self, action):
         act_k = (self.action_space.high - self.action_space.low)/2.
         act_b = (self.action_space.high + self.action_space.low)/2.
+        #print(act_k * action + act_b)
         return act_k * action + act_b
 
     def reset_robot(self, robot_id, goal_pose):

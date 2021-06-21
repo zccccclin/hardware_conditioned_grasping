@@ -72,7 +72,7 @@ class ReacherEnv(BaseEnv):
     def gen_random_goal(self):
         x = np.random.uniform(0.3,0.8)
         y = np.random.uniform(-0.5,0.5)
-        z = np.random.uniform(0.2,0.6)
+        z = np.random.uniform(0.4,0.8)
         xyz = np.array([x,y,z])
         return xyz
 

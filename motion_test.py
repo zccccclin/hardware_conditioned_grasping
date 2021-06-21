@@ -44,7 +44,7 @@ def main():
             bodyIndex=robot_id,
             jointIndices=joint_indices,
             controlMode=p.TORQUE_CONTROL,
-            forces=torque,
+            forces=[0,-100,0,0,0,0]
         )
 
         p.stepSimulation()
