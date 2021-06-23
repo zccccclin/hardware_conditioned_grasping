@@ -13,12 +13,12 @@ def main():
     p.setAdditionalSearchPath(pybullet_data.getDataPath())
     p.loadURDF("plane.urdf")
     p.setGravity(0,0,-9.81)
-    robot_id = p.loadURDF("assets/ur5_w_gripper/model.urdf", useFixedBase=True)
+    robot_id = p.loadURDF("../assets/ur5_w_gripper/model.urdf", useFixedBase=True)
     x = np.random.uniform(0.3,0.8)
     y = np.random.uniform(-0.3,0.3)
     z = np.random.uniform(0.2,0.6)
     goal_pose = np.array([x,y,z])
-    goal = p.loadURDF('assets/goal.urdf',goal_pose)
+    goal = p.loadURDF('../assets/goal.urdf',goal_pose)
     num_dofs = 6
     joint_indices = range(num_dofs)
 
@@ -44,7 +44,7 @@ def main():
             bodyIndex=robot_id,
             jointIndices=joint_indices,
             controlMode=p.TORQUE_CONTROL,
-            forces=[0,-100,0,0,0,0]
+            forces=torque
         )
 
         p.stepSimulation()
