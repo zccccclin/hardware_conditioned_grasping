@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<robot name="gripper_3f_1j">
+    <link name="palm">
+        <inertia>
+            <mass value='3.0'/>
+            <origin xyz='0 0 0'/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+        </inertia>
+        <visual>
+            <geometry>
+                <cylinder length="0.03" radius="0.05"/>
+            </geometry>
+            <material name="blue">
+                <color rgba="0 0 .8 1"/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0 " xyz="0 0 0"/>
+            <geometry>
+                <cylinder length="0.04" radius="0.05"/>
+            </geometry>
+            <contact_coefficients kd="1.0" kp="10000.0" mu="1.5"/>
+        </collision>
+    </link>
+    
+    <link name='finger_1'>
+        <inertia>
+            <mass value='.1'/>
+            <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+        </inertia>
+        <visual>
+            <origin xyz='0 0 .05'/>
+            <geometry>
+                <cylinder length='.1' radius='.01'/>
+            </geometry>
+            <material name='green'>
+                <color rgba='0 1 0 1'/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0 " xyz="0 0 0"/>
+            <geometry>
+                <cylinder length='.1' radius='.01'/>
+            </geometry>
+            <contact_coefficients kd="1.0" kp="10000.0" mu="1"/>
+        </collision>
+    </link>
+
+    <joint name='finger_1_joint' type="revolute">
+        <origin xyz=".05 0 .0" rpy="0 .25 0"/>
+        <parent link='palm'/>
+        <child link='finger_1'/>
+        <axis xyz='0 1 0'/>
+        <dynamics damping='100.0' friction='1.0'/>
+        <limit effort='30' lower='-.6' upper='.25' velocity='2.0'/>
+    </joint>
+
+    <link name='finger_2'>
+        <inertia>
+            <mass value='.1'/>
+            <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+        </inertia>
+        <visual>
+            <origin xyz='0 0 .05'/>
+            <geometry>
+                <cylinder length='.1' radius='.01'/>
+            </geometry>
+            <material name='green'>
+                <color rgba='0 1 0 1'/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0 " xyz="0 0 0"/>
+            <geometry>
+                <cylinder length='.1' radius='.01'/>
+            </geometry>
+            <contact_coefficients kd="1.0" kp="10000.0" mu="1"/>
+        </collision>
+    </link>
+
+    <joint name='finger_2_joint' type="revolute">
+        <origin xyz="-.025 -0.043301270189222 .0" rpy=".25 -.25 0"/>
+        <parent link='palm'/>
+        <child link='finger_2'/>
+        <axis xyz='1 -1 0'/>
+        <dynamics damping='100.0' friction='1.0'/>
+        <limit effort='30' lower='-.6' upper='.25' velocity='2.0'/>
+    </joint>
+
+    <link name='finger_3'>
+        <inertia>
+            <mass value='.1'/>
+            <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+        </inertia>
+        <visual>
+            <origin xyz='0 0 .05'/>
+            <geometry>
+                <cylinder length='.1' radius='.01'/>
+            </geometry>
+            <material name='green'>
+                <color rgba='0 1 0 1'/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0 " xyz="0 0 0"/>
+            <geometry>
+                <cylinder length='.1' radius='.01'/>
+            </geometry>
+            <contact_coefficients kd="1.0" kp="10000.0" mu="1"/>
+        </collision>
+    </link>
+
+    <joint name='finger_3_joint' type="revolute">
+        <origin xyz="-.025 .043301270189222 .0" rpy="-.25 -.25 0"/>
+        <parent link='palm'/>
+        <child link='finger_3'/>
+        <axis xyz='-1 -1 0'/>
+        <limit effort='30' lower='-.6' upper='.25' velocity='2.0'/>
+        <dynamics damping='100.0' friction='1.0'/>
+    </joint>
+</robot>
