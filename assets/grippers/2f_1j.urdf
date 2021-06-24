@@ -68,29 +68,7 @@
             <contact_coefficients kd="1.0" kp="10000.0" mu="1"/>
         </collision>
     </link>
-    <link name='finger_3'>
-        <inertia>
-            <mass value='.1'/>
-            <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
-        </inertia>
-        <visual>
-            <origin xyz='0 0 .05'/>
-            <geometry>
-                <cylinder length='.1' radius='.01'/>
-            </geometry>
-            <material name='green'>
-                <color rgba='0 1 0 1'/>
-            </material>
-        </visual>
-        <collision>
-            <origin rpy="0 0 0 " xyz="0 0 0"/>
-            <geometry>
-                <cylinder length='.1' radius='.01'/>
-            </geometry>
-            <contact_coefficients kd="1.0" kp="10000.0" mu="1"/>
-        </collision>
-    </link>
-
+    
     <link name='finger_1_slot'>
         <visual>
             <origin xyz='0 0 0'/>
@@ -107,15 +85,7 @@
             </geometry>
         </visual>
     </link>
-    <link name='finger_3_slot'>
-        <visual>
-            <origin xyz='0 0 0'/>
-            <geometry>
-                <sphere radius='.015'/>
-            </geometry>
-        </visual>
-    </link>
-
+    
     <joint name='finger_1_joint' type="revolute">
         <origin xyz="0 0 .0" rpy="0 .25 0"/>
         <parent link='finger_1_slot'/>
@@ -125,22 +95,12 @@
         <limit effort='30' lower='-.6' upper='.25' velocity='2.0'/>
     </joint>
     <joint name='finger_2_joint' type="revolute">
-        <origin xyz="0 0 .0" rpy=".25 -.25 0"/>
+        <origin xyz="0 0 .0" rpy="0 -.25 0"/>
         <parent link='finger_2_slot'/>
         <child link='finger_2'/>
-        <axis xyz='1 -1 0'/>
+        <axis xyz=' -1 0'/>
         <dynamics damping='100.0' friction='1.0'/>
         <limit effort='30' lower='-.6' upper='.25' velocity='2.0'/>
-        <mimic joint='finger_1_joint' multiplier='1'/>
-
-    </joint>
-    <joint name='finger_3_joint' type="revolute">
-        <origin xyz="0 .0 .0" rpy="-.25 -.25 0"/>
-        <parent link='finger_3_slot'/>
-        <child link='finger_3'/>
-        <axis xyz='-1 -1 0'/>
-        <limit effort='30' lower='-.6' upper='.25' velocity='2.0'/>
-        <dynamics damping='100.0' friction='1.0'/>
         <mimic joint='finger_1_joint' multiplier='1'/>
     </joint>
 
@@ -150,14 +110,8 @@
         <child link='finger_1_slot'/>
     </joint>
     <joint name='finger_2_slot_joint' type="fixed">
-        <origin xyz="-.025 -0.043301270189222 .0" rpy="0 0 0"/>
+        <origin xyz="-.05 0 .0" rpy="0 0 0"/>
         <parent link='palm'/>
         <child link='finger_2_slot'/>
     </joint>
-    <joint name='finger_3_slot_joint' type="fixed">
-        <origin xyz="-.025 0.043301270189222 .0" rpy="0 0 0"/>
-        <parent link='palm'/>
-        <child link='finger_3_slot'/>
-    </joint>
-
 </robot>
