@@ -17,6 +17,8 @@ def main():
     hand_2f2j = p.loadURDF("../assets/grippers/2f_2j.urdf", [.3, 0 , .3],[1,1,0,0],useFixedBase=True )
     hand_3f1j = p.loadURDF("../assets/grippers/3f_1j.urdf", [.6, 0 , .3],[1,1,0,0],useFixedBase=True )
     hand_3f2j = p.loadURDF("../assets/grippers/3f_2j.urdf", [.9, 0 , .3],[1,1,0,0],useFixedBase=True )
+    barrett = p.loadURDF("../assets/barrett_hand/model.urdf", [1.2,0, .3],[1,1,0,0],useFixedBase=True)
+
     cube1 = p.loadURDF('cube_small.urdf',[0,0,.275])
     cube2 = p.loadURDF('cube_small.urdf',[.3,0,.275])
     cube3 = p.loadURDF('cube_small.urdf',[.6,0,.275])
@@ -49,7 +51,7 @@ def main():
     while True:
         time.sleep(.1)
         angle = -.6
-        if keyboard.is_pressed('s'):
+        if keyboard.is_pressed('f'):
                 angle *= -0.41666666666
         for gripper, idx in zip (gripper_list,joint_indices_list):
             joint_states = p.getJointStates(gripper, idx)
