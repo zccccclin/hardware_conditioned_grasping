@@ -49,7 +49,7 @@ def main():
     while True:
         time.sleep(.1)
         angle = -.6
-        if keyboard.is_pressed('a'):
+        if keyboard.is_pressed('s'):
                 angle *= -0.41666666666
         for gripper, idx in zip (gripper_list,joint_indices_list):
             joint_states = p.getJointStates(gripper, idx)
