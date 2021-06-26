@@ -17,7 +17,7 @@
         <collision>
             <origin rpy="0 0 0 " xyz="0 0 0"/>
             <geometry>
-                <cylinder length="0.04" radius="0.015"/>
+                <cylinder length="0.03" radius="0.05"/>
             </geometry>
             <contact_coefficients kd="1.0" kp="10000.0" mu="1.5"/>
         </collision>
@@ -38,7 +38,7 @@
             </material>
         </visual>
         <collision>
-            <origin rpy="0 0 0 " xyz="0 0 0"/>
+            <origin rpy="0 0 0 " xyz="0 0 .025"/>
             <geometry>
                 <cylinder length='.05' radius='.01'/>
             </geometry>
@@ -60,7 +60,7 @@
             </material>
         </visual>
         <collision>
-            <origin rpy="0 0 0 " xyz="0 0 0"/>
+            <origin rpy="0 0 0 " xyz="0 0 0.025"/>
             <geometry>
                 <cylinder length='.05' radius='.01'/>
             </geometry>
@@ -82,7 +82,7 @@
             </material>
         </visual>
         <collision>
-            <origin rpy="0 0 0 " xyz="0 0 0"/>
+            <origin rpy="0 0 0 " xyz="0 0 0.025"/>
             <geometry>
                 <cylinder length='.05' radius='.01'/>
             </geometry>
@@ -104,7 +104,7 @@
             </material>
         </visual>
         <collision>
-            <origin rpy="0 0 0 " xyz="0 0 0"/>
+            <origin rpy="0 0 0 " xyz="0 0 .025"/>
             <geometry>
                 <cylinder length='.05' radius='.01'/>
             </geometry>
@@ -126,7 +126,7 @@
             </material>
         </visual>
         <collision>
-            <origin rpy="0 0 0 " xyz="0 0 0"/>
+            <origin rpy="0 0 0 " xyz="0 0 .025"/>
             <geometry>
                 <cylinder length='.05' radius='.01'/>
             </geometry>
@@ -148,7 +148,7 @@
             </material>
         </visual>
         <collision>
-            <origin rpy="0 0 0 " xyz="0 0 0"/>
+            <origin rpy="0 0 0 " xyz="0 0 .025"/>
             <geometry>
                 <cylinder length='.05' radius='.01'/>
             </geometry>
