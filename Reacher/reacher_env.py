@@ -40,7 +40,7 @@ class ReacherEnv(BaseEnv):
         
     def step(self, action):
         scaled_action = self.scale_action(action[:6])
-        joint_indices =  range(6)
+        joint_indices =  [0,1,2,3,4,5]
         p.setJointMotorControlArray(
             bodyIndex=self.sim,
             jointIndices=joint_indices,

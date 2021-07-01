@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot name="gripper_3f_1j">
+<robot name="gripper_2f_1j">
     <link name="palm">
         <inertia>
             <mass value='3.0'/>
@@ -69,7 +69,7 @@
     </link>
 
 
-    <link name='f11_slot'>
+    <link name='f11_base'>
         <visual>
             <origin xyz='0 0 0'/>
             <geometry>
@@ -77,7 +77,7 @@
             </geometry>
         </visual>
     </link>
-    <link name='f21_slot'>
+    <link name='f21_base'>
         <visual>
             <origin xyz='0 0 0'/>
             <geometry>
@@ -89,7 +89,7 @@
 
     <joint name='f11_joint' type="revolute">
         <origin xyz="0 0 .0" rpy="0 .25 0"/>
-        <parent link='f11_slot'/>
+        <parent link='f11_base'/>
         <child link='f11'/>
         <axis xyz='0 1 0'/>
         <dynamics damping='100.0' friction='1.0'/>
@@ -97,7 +97,7 @@
     </joint>
     <joint name='f21_joint' type="revolute">
         <origin xyz="0 0 .0" rpy=".0 -.25 0"/>
-        <parent link='f21_slot'/>
+        <parent link='f21_base'/>
         <child link='f21'/>
         <axis xyz='0 -1 0'/>
         <dynamics damping='100.0' friction='1.0'/>
@@ -106,16 +106,16 @@
 
 
 
-    <joint name='f11_slot_joint' type="fixed">
+    <joint name='f11_base_joint' type="fixed">
         <origin xyz=".05 0 .0" rpy="0 0 0"/>
         <parent link='palm'/>
-        <child link='f11_slot'/>
+        <child link='f11_base'/>
     </joint>
 
-    <joint name='f21_slot_joint' type="fixed">
+    <joint name='f21_base_joint' type="fixed">
         <origin xyz="-.05 -0.0 .0" rpy="0 0 0"/>
         <parent link='palm'/>
-        <child link='f21_slot'/>
+        <child link='f21_base'/>
     </joint>
 
     

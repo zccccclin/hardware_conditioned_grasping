@@ -13,30 +13,28 @@ def main():
     p.setAdditionalSearchPath(pybullet_data.getDataPath())
     p.loadURDF('plane.urdf')
     p.setGravity(0,0,-9.81)
-    hand_2f1j = p.loadURDF("../assets/grippers/2f_1j.urdf", [0, 0 , .3],[1,1,0,0],useFixedBase=True )
-    hand_2f2j = p.loadURDF("../assets/grippers/2f_2j.urdf", [.3, 0 , .3],[1,1,0,0],useFixedBase=True )
-    hand_3f1j = p.loadURDF("../assets/grippers/3f_1j.urdf", [.6, 0 , .3],[1,1,0,0],useFixedBase=True )
-    hand_3f2j = p.loadURDF("../assets/grippers/3f_2j.urdf", [.9, 0 , .3],[1,1,0,0],useFixedBase=True )
+    hand_2f1j = p.loadURDF("../../assets/grippers/2f_1j.urdf", [0, 0 , .3],[1,1,0,0],useFixedBase=True )
+    hand_2f2j = p.loadURDF("../../assets/grippers/2f_2j.urdf", [.3, 0 , .3],[1,1,0,0],useFixedBase=True )
+    hand_3f1j = p.loadURDF("../../assets/grippers/3f_1j.urdf", [.6, 0 , .3],[1,1,0,0],useFixedBase=True )
+    hand_3f2j = p.loadURDF("../../assets/grippers/3f_2j.urdf", [.9, 0 , .3],[1,1,0,0],useFixedBase=True )
+    gen1_3f_1j = p.loadURDF('../../assets/gen_gripper/3f_1j/robot_0/model.urdf', [0, .3 , .3],[1,1,0,0],useFixedBase=True)
+    gen2_3f_1j = p.loadURDF('../../assets/gen_gripper/3f_1j/robot_1/model.urdf', [.3, .3 , .3],[1,1,0,0],useFixedBase=True)
+    gen1_3f_2j = p.loadURDF('../../assets/gen_gripper/3f_2j/robot_0/model.urdf', [.6, .3 , .3],[1,1,0,0],useFixedBase=True)
+    gen2_3f_2j = p.loadURDF('../../assets/gen_gripper/3f_2j/robot_3/model.urdf', [.9, .3 , .3],[1,1,0,0],useFixedBase=True)
+
     barrett = p.loadURDF("../assets/barrett_hand/model.urdf", [1.2,0, .3],[1,1,0,0],useFixedBase=True)
 
     cube1 = p.loadURDF('cube_small.urdf',[0,0,.275])
     cube2 = p.loadURDF('cube_small.urdf',[.3,0,.275])
     cube3 = p.loadURDF('cube_small.urdf',[.6,0,.275])
     cube4 = p.loadURDF('cube_small.urdf',[.9,0,.275])
+    cube5 = p.loadURDF('cube_small.urdf',[.0,0.3,.275])
+    cube6 = p.loadURDF('cube_small.urdf',[.3,.3,.275])
+    cube7 = p.loadURDF('cube_small.urdf',[.6,.3,.275])
+    cube8 = p.loadURDF('cube_small.urdf',[.9,.3,.275])
     
-    gripper_list = [hand_2f1j, hand_2f2j, hand_3f1j, hand_3f2j]
-    '''
-    section_dict = ['act_idx_2f1j', 'act_idx_2f2j', 'act_idx_3f1j', 'act_idx_3f2j']
-    gripper_dict = OrderedDict((sec, {}) for sec in section_dict)
+    gripper_list = [hand_2f1j, hand_2f2j, hand_3f1j, hand_3f2j, gen1_3f_1j, gen2_3f_1j, gen1_3f_2j, gen2_3f_2j]
 
-    for gripper , dict  in zip(gripper_list, gripper_dict):
-        for i in range(p.getNumJoints(gripper)):
-            joint_info = p.getJointInfo(gripper,i)
-            joint_name = joint_info[1].decode("utf-8") 
-            joint_idx = joint_info[0]
-            if not 'slot' in joint_name:
-                gripper_dict[dict][joint_name] = joint_idx
-                '''
     joint_indices_list = []
     for gripper in gripper_list:  
         joint_indices = range(1, p.getNumJoints(gripper), 2)  
@@ -51,7 +49,7 @@ def main():
     while True:
         time.sleep(.1)
         angle = -.6
-        if keyboard.is_pressed('f'):
+        if keyboard.is_pressed('r'):
                 angle *= -0.41666666666
         for gripper, idx in zip (gripper_list,joint_indices_list):
             joint_states = p.getJointStates(gripper, idx)

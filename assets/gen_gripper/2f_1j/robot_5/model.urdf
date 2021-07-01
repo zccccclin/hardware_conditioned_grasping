@@ -1,0 +1,123 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<robot name="gripper_2f_1j">
+  <link name="palm">
+    <inertial>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0"/>
+      <mass value="1.0"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <cylinder radius="0.05" length="0.03"/>
+      </geometry>
+      <material name="blue"/>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="0.05" length="0.03"/>
+      </geometry>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+    </collision>
+  </link>
+  <link name="f11">
+    <inertial>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0"/>
+      <mass value="1.0"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <cylinder radius="0.005707662200519865" length="0.1718863642225534"/>
+      </geometry>
+      <material name="green"/>
+      <origin xyz="0.0 0.0 0.0859431821112767" rpy="0.0 -0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="0.005707662200519865" length="0.1718863642225534"/>
+      </geometry>
+      <origin xyz="0.0 0.0 0.05" rpy="0.0 0.0 0.0"/>
+    </collision>
+  </link>
+  <link name="f21">
+    <inertial>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0"/>
+      <mass value="1.0"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <cylinder radius="0.005707662200519865" length="0.1718863642225534"/>
+      </geometry>
+      <material name="green"/>
+      <origin xyz="0.0 0.0 0.0859431821112767" rpy="0.0 -0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="0.005707662200519865" length="0.1718863642225534"/>
+      </geometry>
+      <origin xyz="0.0 0.0 0.05" rpy="0.0 0.0 0.0"/>
+    </collision>
+  </link>
+  <link name="f11_base">
+    <inertial>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0"/>
+      <mass value="1.0"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <sphere radius="0.015"/>
+      </geometry>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0"/>
+    </visual>
+  </link>
+  <link name="f21_base">
+    <inertial>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0"/>
+      <mass value="1.0"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <sphere radius="0.015"/>
+      </geometry>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0"/>
+    </visual>
+  </link>
+  <joint name="f11_joint" type="revolute">
+    <dynamics damping="100.0" friction="1.0"/>
+    <limit effort="30.0" velocity="2.0" lower="-0.6" upper="0.25"/>
+    <parent link="f11_base"/>
+    <child link="f11"/>
+    <axis xyz="0. 1. 0."/>
+    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.25 0.0"/>
+  </joint>
+  <joint name="f21_joint" type="revolute">
+    <dynamics damping="100.0" friction="1.0"/>
+    <limit effort="30.0" velocity="2.0" lower="-0.6" upper="0.25"/>
+    <parent link="f21_base"/>
+    <child link="f21"/>
+    <axis xyz=" 0. -1.  0."/>
+    <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.25 0.0"/>
+  </joint>
+  <joint name="f11_base_joint" type="fixed">
+    <parent link="palm"/>
+    <child link="f11_base"/>
+    <axis xyz="1. 0. 0."/>
+    <origin xyz="0.05 0.0 0.0" rpy="0.0 0.0 0.0"/>
+  </joint>
+  <joint name="f21_base_joint" type="fixed">
+    <parent link="palm"/>
+    <child link="f21_base"/>
+    <axis xyz="1. 0. 0."/>
+    <origin xyz="-0.05 -0.0 0.0" rpy="0.0 0.0 0.0"/>
+  </joint>
+  <material name="blue">
+    <color rgba="0.  0.  0.8 1. "/>
+  </material>
+  <material name="green">
+    <color rgba="0. 1. 0. 1."/>
+  </material>
+</robot>

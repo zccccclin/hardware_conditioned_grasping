@@ -1,0 +1,507 @@
+<?xml version="1.0" ?>
+<!--FOR GRIPPER, THERE IS NO LINK INERTIA DEFINED HERE-->
+<robot name="ur5_2f1j">
+
+
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <mesh filename="meshes/ur5/visual/base.obj"/>
+      </geometry>
+      <material name="LightGrey">
+        <color rgba="0.7 0.7 0.7 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="meshes/ur5/collision/base.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="4.0"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <inertia ixx="0.00443333156" ixy="0.0" ixz="0.0" iyy="0.00443333156" iyz="0.0" izz="0.0072"/>
+    </inertial>
+  </link>
+
+  <joint name="shoulder_pan_joint" type="revolute">
+    <parent link="base_link"/>
+    <child link="shoulder_link"/>
+    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.089159"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="150.0" lower="-3.142" upper="3.142" velocity="3.15"/>
+    <dynamics damping="0.0" friction="0.0"/>
+  </joint>
+  <link name="shoulder_link">
+    <visual>
+      <geometry>
+        <mesh filename="meshes/ur5/visual/shoulder.obj"/>
+      </geometry>
+      <material name="LightGrey">
+        <color rgba="0.7 0.7 0.7 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="meshes/ur5/collision/shoulder.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="3.7"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <inertia ixx="0.010267495893" ixy="0.0" ixz="0.0" iyy="0.010267495893" iyz="0.0" izz="0.00666"/>
+    </inertial>
+  </link>
+  <joint name="shoulder_lift_joint" type="revolute">
+    <parent link="shoulder_link"/>
+    <child link="upper_arm_link"/>
+    <origin rpy="0.0 1.57079632679 0.0" xyz="0.0 0.13585 0.0"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="150.0" lower="-2" upper="0" velocity="3.15"/>
+    <dynamics damping="0.0" friction="0.0"/>
+  </joint>
+  <link name="upper_arm_link">
+    <visual>
+      <geometry>
+        <mesh filename="meshes/ur5/visual/upperarm.obj"/>
+      </geometry>
+      <material name="LightGrey">
+        <color rgba="0.7 0.7 0.7 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="meshes/ur5/collision/upperarm.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="8.393"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.28"/>
+      <inertia ixx="0.22689067591" ixy="0.0" ixz="0.0" iyy="0.22689067591" iyz="0.0" izz="0.0151074"/>
+    </inertial>
+  </link>
+  <joint name="elbow_joint" type="revolute">
+    <parent link="upper_arm_link"/>
+    <child link="forearm_link"/>
+    <origin rpy="0.0 0.0 0.0" xyz="0.0 -0.1197 0.425"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="150.0" lower="-3.14159265359" upper="3.14159265359" velocity="3.15"/>
+    <dynamics damping="0.0" friction="0.0"/>
+  </joint>
+  <link name="forearm_link">
+    <visual>
+      <geometry>
+        <mesh filename="meshes/ur5/visual/forearm.obj"/>
+      </geometry>
+      <material name="LightGrey">
+        <color rgba="0.7 0.7 0.7 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="meshes/ur5/collision/forearm.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="2.275"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.25"/>
+      <inertia ixx="0.049443313556" ixy="0.0" ixz="0.0" iyy="0.049443313556" iyz="0.0" izz="0.004095"/>
+    </inertial>
+  </link>
+  <joint name="wrist_1_joint" type="revolute">
+    <parent link="forearm_link"/>
+    <child link="wrist_1_link"/>
+    <origin rpy="0.0 1.57079632679 0.0" xyz="0.0 0.0 0.39225"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="28.0" lower="-6.28318530718" upper="6.28318530718" velocity="3.2"/>
+    <dynamics damping="0.0" friction="0.0"/>
+  </joint>
+  <link name="wrist_1_link">
+    <visual>
+      <geometry>
+        <mesh filename="meshes/ur5/visual/wrist1.obj"/>
+      </geometry>
+      <material name="LightGrey">
+        <color rgba="0.7 0.7 0.7 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="meshes/ur5/collision/wrist1.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.219"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <inertia ixx="0.111172755531" ixy="0.0" ixz="0.0" iyy="0.111172755531" iyz="0.0" izz="0.21942"/>
+    </inertial>
+  </link>
+  <joint name="wrist_2_joint" type="revolute">
+    <parent link="wrist_1_link"/>
+    <child link="wrist_2_link"/>
+    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.093 0.0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="28.0" lower="-6.28318530718" upper="6.28318530718" velocity="3.2"/>
+    <dynamics damping="0.0" friction="0.0"/>
+  </joint>
+  <link name="wrist_2_link">
+    <visual>
+      <geometry>
+        <mesh filename="meshes/ur5/visual/wrist2.obj"/>
+      </geometry>
+      <material name="LightGrey">
+        <color rgba="0.7 0.7 0.7 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="meshes/ur5/collision/wrist2.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.219"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <inertia ixx="0.111172755531" ixy="0.0" ixz="0.0" iyy="0.111172755531" iyz="0.0" izz="0.21942"/>
+    </inertial>
+  </link>
+  <joint name="wrist_3_joint" type="revolute">
+    <parent link="wrist_2_link"/>
+    <child link="wrist_3_link"/>
+    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.09465"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="28.0" lower="-6.28318530718" upper="6.28318530718" velocity="3.2"/>
+    <dynamics damping="0.0" friction="0.0"/>
+  </joint>
+  <link name="wrist_3_link">
+    <visual>
+      <geometry>
+        <mesh filename="meshes/ur5/visual/wrist3.obj"/>
+      </geometry>
+      <material name="LightGrey">
+        <color rgba="0.7 0.7 0.7 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="meshes/ur5/collision/wrist3.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1879"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <inertia ixx="0.0171364731454" ixy="0.0" ixz="0.0" iyy="0.0171364731454" iyz="0.0" izz="0.033822"/>
+    </inertial>
+  </link>
+
+  <!-- CONNECT GRIPPER TO ARM -->
+  <joint name="ee_fixed_joint" type="fixed">
+    <parent link="wrist_3_link"/>
+    <child link="ee_link"/>
+    <origin rpy="0.0 0.0 1.57079632679" xyz="0.0 0.0823. 0."/>
+  </joint>
+  <link name="ee_link">
+    <collision>
+      <geometry>
+        <box size="0.01 0.01 0.01"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="-0.01 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="0."/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <inertia ixx="0." ixy="0.0" ixz="0.0" iyy="0." iyz="0.0" izz="0."/>
+    </inertial>
+  </link>
+
+  <joint name='palm_ee_joint' type='fixed'>
+    <parent link='ee_link'/>
+    <child link='palm'/>
+    <origin rpy="3.14 1.57 3.14" xyz="0.0 0. 0."/>
+  </joint>
+
+    <link name="palm">
+        <inertia>
+            <mass value='3.0'/>
+            <origin xyz='0 0 0'/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+        </inertia>
+        <visual>
+            <geometry>
+                <cylinder length="0.03" radius="0.05"/>
+            </geometry>
+            <material name="blue">
+                <color rgba="0 0 .8 1"/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0 " xyz="0 0 0"/>
+            <geometry>
+                <cylinder length="0.03" radius="0.05"/>
+            </geometry>
+            <contact_coefficients kd="1.0" kp="10000.0" mu="1.5"/>
+        </collision>
+    </link>
+
+    <link name='f11'>
+        <inertia>
+            <mass value='.1'/>
+            <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+        </inertia>
+        <visual>
+            <origin xyz='0 0 .025'/>
+            <geometry>
+                <cylinder length='.05' radius='.01'/>
+            </geometry>
+            <material name='green'>
+                <color rgba='0 1 0 1'/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0 " xyz="0 0 .025"/>
+            <geometry>
+                <cylinder length='.05' radius='.01'/>
+            </geometry>
+            <contact_coefficients kd="1.0" kp="10000.0" mu="1"/>
+        </collision>
+    </link>
+    <link name='f12'>
+        <inertia>
+            <mass value='.1'/>
+            <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+        </inertia>
+        <visual>
+            <origin xyz='0 0 .025'/>
+            <geometry>
+                <cylinder length='.05' radius='.01'/>
+            </geometry>
+            <material name='green'>
+                <color rgba='0 1 0 1'/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0 " xyz="0 0 0.025"/>
+            <geometry>
+                <cylinder length='.05' radius='.01'/>
+            </geometry>
+            <contact_coefficients kd="1.0" kp="10000.0" mu="1"/>
+        </collision>
+    </link>
+    <link name='f21'>
+        <inertia>
+            <mass value='.1'/>
+            <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+        </inertia>
+        <visual>
+            <origin xyz='0 0 .025'/>
+            <geometry>
+                <cylinder length='.05' radius='.01'/>
+            </geometry>
+            <material name='green'>
+                <color rgba='0 1 0 1'/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0 " xyz="0 0 0.025"/>
+            <geometry>
+                <cylinder length='.05' radius='.01'/>
+            </geometry>
+            <contact_coefficients kd="1.0" kp="10000.0" mu="1"/>
+        </collision>
+    </link>
+    <link name='f22'>
+        <inertia>
+            <mass value='.1'/>
+            <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+        </inertia>
+        <visual>
+            <origin xyz='0 0 .025'/>
+            <geometry>
+                <cylinder length='.05' radius='.01'/>
+            </geometry>
+            <material name='green'>
+                <color rgba='0 1 0 1'/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0 " xyz="0 0 .025"/>
+            <geometry>
+                <cylinder length='.05' radius='.01'/>
+            </geometry>
+            <contact_coefficients kd="1.0" kp="10000.0" mu="1"/>
+        </collision>
+    </link>
+    <link name='f31'>
+        <inertia>
+            <mass value='.1'/>
+            <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+        </inertia>
+        <visual>
+            <origin xyz='0 0 .025'/>
+            <geometry>
+                <cylinder length='.05' radius='.01'/>
+            </geometry>
+            <material name='green'>
+                <color rgba='0 1 0 1'/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0 " xyz="0 0 .025"/>
+            <geometry>
+                <cylinder length='.05' radius='.01'/>
+            </geometry>
+            <contact_coefficients kd="1.0" kp="10000.0" mu="1"/>
+        </collision>
+    </link>
+    <link name='f32'>
+        <inertia>
+            <mass value='.1'/>
+            <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+        </inertia>
+        <visual>
+            <origin xyz='0 0 .025'/>
+            <geometry>
+                <cylinder length='.05' radius='.01'/>
+            </geometry>
+            <material name='green'>
+                <color rgba='0 1 0 1'/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0 " xyz="0 0 .025"/>
+            <geometry>
+                <cylinder length='.05' radius='.01'/>
+            </geometry>
+            <contact_coefficients kd="1.0" kp="10000.0" mu="1"/>
+        </collision>
+    </link>
+
+    <link name='f11_base'>
+        <visual>
+            <origin xyz='0 0 0'/>
+            <geometry>
+                <sphere radius='.015'/>
+            </geometry>
+        </visual>
+    </link>
+    <link name='f12_slot'>
+        <visual>
+            <geometry>
+                <sphere radius='.015'/>
+            </geometry>
+        </visual>
+    </link>
+    <link name='f21_base'>
+        <visual>
+            <origin xyz='0 0 0'/>
+            <geometry>
+                <sphere radius='.015'/>
+            </geometry>
+        </visual>
+    </link>
+    <link name='f22_slot'>
+        <visual>
+            <geometry>
+                <sphere radius='.015'/>
+            </geometry>
+        </visual>
+    </link>
+    <link name='f31_base'>
+        <visual>
+            <origin xyz='0 0 0'/>
+            <geometry>
+                <sphere radius='.015'/>
+            </geometry>
+        </visual>
+    </link>
+    <link name='f32_slot'>
+        <visual>
+            <geometry>
+                <sphere radius='.015'/>
+            </geometry>
+        </visual>
+    </link>
+
+    <joint name='f11_joint' type="revolute">
+        <origin xyz="0 0 .0" rpy="0 .25 0"/>
+        <parent link='f11_base'/>
+        <child link='f11'/>
+        <axis xyz='0 1 0'/>
+        <dynamics damping='100.0' friction='1.0'/>
+        <limit effort='30' lower='-.4' upper='.25' velocity='2.0'/>
+    </joint>
+    <joint name='f12_joint' type="revolute">
+        <origin xyz="0 0 .0" rpy="0 -.0 0"/>
+        <parent link='f12_slot'/>
+        <child link='f12'/>
+        <axis xyz='0 1 0'/>
+        <dynamics damping='100.0' friction='1.0'/>
+        <limit effort='30' lower='-.65' upper='.0' velocity='2.0'/>
+		<mimic joint='f11_joint' multiplier='2' offset='-.25'/>
+	</joint>
+    <joint name='f21_joint' type="revolute">
+        <origin xyz="0 0 .0" rpy=".25 -.25 0"/>
+        <parent link='f21_base'/>
+        <child link='f21'/>
+        <axis xyz='1 -1 0'/>
+        <dynamics damping='100.0' friction='1.0'/>
+        <limit effort='30' lower='-.4' upper='.25' velocity='2.0'/>
+    </joint>
+    <joint name='f22_joint' type="revolute">
+        <origin xyz="0 0 .0" rpy="0 -.0 0"/>
+        <parent link='f22_slot'/>
+        <child link='f22'/>
+        <axis xyz='1 -1 0'/>
+        <dynamics damping='100.0' friction='1.0'/>
+        <limit effort='30' lower='-.65' upper='.0' velocity='2.0'/>
+		<mimic joint='f21_joint' multiplier='1' offset='-.25'/>
+	</joint>
+    <joint name='f31_joint' type="revolute">
+        <origin xyz="0 .0 .0" rpy="-.25 -.25 0"/>
+        <parent link='f31_base'/>
+        <child link='f31'/>
+        <axis xyz='-1 -1 0'/>
+        <limit effort='30' lower='-.4' upper='.25' velocity='2.0'/>
+        <dynamics damping='100.0' friction='1.0'/>
+    </joint>
+    <joint name='f32_joint' type="revolute">
+        <origin xyz="0 0 .0" rpy="0 -.0 0"/>
+        <parent link='f32_slot'/>
+        <child link='f32'/>
+        <axis xyz='-1 -1 0'/>
+        <dynamics damping='100.0' friction='1.0'/>
+        <limit effort='30' lower='-.65' upper='.0' velocity='2.0'/>
+		<mimic joint='f31_joint' multiplier='1' offset='-.25'/>
+	</joint>
+
+    <joint name='f11_base_joint' type="fixed">
+        <origin xyz=".05 0 .0" rpy="0 0 0"/>
+        <parent link='palm'/>
+        <child link='f11_base'/>
+    </joint>
+    <joint name='f12_slot_joint' type="fixed">
+        <origin xyz="0 0 .05" rpy="0 0 0"/>
+        <parent link='f11'/>
+        <child link='f12_slot'/>
+    </joint>
+    <joint name='f21_base_joint' type="fixed">
+        <origin xyz="-.025 -0.043301270189222 .0" rpy="0 0 0"/>
+        <parent link='palm'/>
+        <child link='f21_base'/>
+    </joint>
+    <joint name='f22_slot_joint' type="fixed">
+        <origin xyz="0 0 .05" rpy="0 0 0"/>
+        <parent link='f21'/>
+        <child link='f22_slot'/>
+    </joint>
+    <joint name='f31_base_joint' type="fixed">
+        <origin xyz="-.025 0.043301270189222 .0" rpy="0 0 0"/>
+        <parent link='palm'/>
+        <child link='f31_base'/>
+    </joint>
+    <joint name='f32_slot_joint' type="fixed">
+        <origin xyz="0 0 .05" rpy="0 0 0"/>
+        <parent link='f31'/>
+        <child link='f32_slot'/>
+    </joint>
+</robot>
+
