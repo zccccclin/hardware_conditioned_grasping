@@ -45,7 +45,6 @@ class GripperEnv(BaseEnv):
         gripper1_pos = p.getJointState(self.sim,6)[0]
         gripper2_pos = p.getJointState(self.sim,7)[0]
         gripper_act = np.array([gripper1_pos + action[3]])*50
-        print(gripper_act)
         desired_joint_positions = np.concatenate([desired_joint_positions, gripper_act, gripper_act])
         
         p.setJointMotorControlArray(
