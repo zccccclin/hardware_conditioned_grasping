@@ -24,7 +24,7 @@ class BaseEnv:
                  with_kin=None,
                  ):
         self.with_kin = with_kin
-        self.goal_dim = 3
+        self.goal_dim = 6
 
 
         self.reward_range = (-np.inf, np.inf)
@@ -146,9 +146,9 @@ class BaseEnv:
         return self.reset(robot_id=robot_id)
 
     def cal_reward(self, s, goal, a ):
-        dist = np.linalg.norm(s - goal)
-        
-        if dist < self.dist_tol:
+        reached = np.linalg.norm(s[:3] - goal[:3])
+        dist = np.linalg.norm(s[3:] - goal[3:])
+        if reached < self.dist_tol and dist < self.dist_tol:
             done = True
             reward_dist = 1
         else:
@@ -165,10 +165,11 @@ class BaseEnv:
         gripper_qpos = np.array([j[0] for j in joint_states])
 
         height_target = np.array([0,0,.3])
-        ob = np.concatenate([endfactor_pos,gripper_qpos,height_target])
+        ob = np.concatenate([gripper_qpos, endfactor_pos, height_target])
 
         
-        ref_point = np.array([p.getBasePositionAndOrientation(self.cube)[0]])
+        ref_point = np.array(p.getBasePositionAndOrientation(self.cube)[0])
+        ref_point = np.concatenate([endfactor_pos,ref_point])
         return ob, ref_point
 
     def get_qpos_qvel(self, sim):

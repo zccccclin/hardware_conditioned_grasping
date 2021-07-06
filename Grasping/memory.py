@@ -47,7 +47,7 @@ class Memory(object):
         self.rewards = RingBuffer(limit, shape=(1,))
         self.terminals1 = RingBuffer(limit, shape=(1,))
         self.observations1 = RingBuffer(limit, shape=observation_shape)
-        self.achieved_goals = RingBuffer(limit, shape=(3,))
+        self.achieved_goals = RingBuffer(limit, shape=(6,))
 
     def sample(self, batch_size):
         # Draw such that we always have a proceeding element.

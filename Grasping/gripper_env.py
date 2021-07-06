@@ -61,6 +61,9 @@ class GripperEnv(BaseEnv):
 
         ob = self.get_obs()
         re_target = np.array([0,0,.3])
+        endfactor_pos  = np.array((p.getLinkState(self.sim, self.end_factor)[4]))
+        re_target = np.concatenate([endfactor_pos, re_target])
+
         reward, dist, done = self.cal_reward(ob[1],
                                              re_target,
                                              action)

@@ -177,7 +177,7 @@ class DDPG:
                                                  replace=False)
                     k_futures = np.concatenate((np.array([t]), k_futures))
                     for future in k_futures:
-                        new_goal = ep_experi['ach_goals'][future][0]
+                        new_goal = ep_experi['ach_goals'][future]
 
                         her_ob = np.concatenate((ob[:-self.goal_dim],
                                                  new_goal),
