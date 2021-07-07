@@ -37,7 +37,7 @@ class GripperEnv(BaseEnv):
     def step(self, action):
         scaled_action = self.scale_action(action)
         hand_pose = np.array(p.getLinkState(self.sim, 7)[4])
-        hand_pose += action[:3]
+        hand_pose += scaled_action[:3]
         desired_joint_positions = p.calculateInverseKinematics(
                                             self.sim, self.end_factor,
                                             hand_pose,[1,1,0,0],

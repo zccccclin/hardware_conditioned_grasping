@@ -136,7 +136,7 @@ class BaseEnv:
         self.plane = p.loadURDF("plane.urdf")
         #self.tray = p.loadURDF('tray/tray.urdf', [.7, 0, 0],[0,0,1,1],useFixedBase=True,)
 
-        self.cube = p.loadURDF('lego/lego.urdf', cube_pose, globalScaling=2)
+        self.cube = p.loadURDF('cube_small.urdf', cube_pose,) #globalScaling=2)
 
         self.update_action_space()
 
