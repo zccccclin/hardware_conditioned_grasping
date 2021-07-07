@@ -32,7 +32,6 @@ class BaseEnv:
         self.dist_tol = tol
         self.pc = bullet_client.BulletClient(p.GUI if render else p.DIRECT)
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
-        p.setGravity(0,0,-9.81)
         self.ll = [-.5, -2, -.5, -1.57, -1.57, -1.57]
         self.ul = [.5, 0, 1.57, 1.54, 1.57, 1.57]
         self.end_factor = 7
@@ -126,14 +125,18 @@ class BaseEnv:
         #robot_file = os.path.join(self.robots[robot_id], 'model.urdf')
         robot_file = '../assets/ur5_w_gripper/2f_1j.urdf'
         p.resetSimulation()
+        p.setGravity(0,0,-9.81)
         robot_pose = [0,0,0]
-        cube_pose = [.65, 0, 0.025]
+        cube_pose = [.7, 0, 0.03]
+        self.act_joint_indices = [0,1,2,3,4,5,9,11]
+
         self.sim = p.loadURDF(robot_file, basePosition=robot_pose,
                               useFixedBase=1, physicsClientId=self.pc._client)
-        self.plane = p.loadURDF("plane.urdf")
-        self.act_joint_indices = [0,1,2,3,4,5,9,11]
         self.reset_robot_pose(self.sim, self.act_joint_indices)
-        self.cube = p.loadURDF('cube_small.urdf', cube_pose)
+        self.plane = p.loadURDF("plane.urdf")
+        #self.tray = p.loadURDF('tray/tray.urdf', [.7, 0, 0],[0,0,1,1],useFixedBase=True,)
+
+        self.cube = p.loadURDF('lego/lego.urdf', cube_pose, globalScaling=2)
 
         self.update_action_space()
 
