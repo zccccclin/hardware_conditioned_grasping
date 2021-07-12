@@ -1,6 +1,6 @@
 import json
 import os
-from typing import Sized
+from typing import Sized, final
 
 import numpy as np
 import gym
@@ -151,15 +151,24 @@ class BaseEnv:
     def cal_reward(self, s, goal, a ):
         reached = np.linalg.norm(s[:3] - goal[:3])
         dist = np.linalg.norm(s[3:] - goal[3:])
-        if reached < self.dist_tol and dist < self.dist_tol:
+        final_dist = [reached, dist]
+        if dist < self.dist_tol and reached < 0.065:
             done = True
+            reward_dist = 10
+        elif reached < 0.075:
+            done = False
             reward_dist = 1
+        elif reached > .22:
+            done = False
+            reward_dist = -10
         else:
             done = False
             reward_dist = -1
         reward = reward_dist
+    
 
-        reward -= 0.1 * np.square(a).sum()
+        #reward -= 0.1 * np.square(a).sum()
+        print(reward)
         return reward, dist, done
 
     def get_obs(self):

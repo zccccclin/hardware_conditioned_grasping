@@ -50,8 +50,8 @@ def main(robot):
     gripper_act = np.zeros(len(act_joint_indices[6:]))
     desired_joint_positions = np.concatenate([desired_joint_positions,gripper_act])
 
-    for i in range(p.getNumJoints(robot_id)):
-        print(p.getJointInfo(robot_id, i))
+    #for i in range(p.getNumJoints(robot_id)):
+        #print(p.getJointInfo(robot_id, i))
 
     while simulate:
         time.sleep(0.01)
@@ -104,7 +104,11 @@ def main(robot):
             targetPositions=desired_joint_positions
             #forces=torque,
         )
-        #print(p.getLinkState(robot_id,6)[0])
+        end_factor_pos = np.array(list(p.getLinkState(robot_id,6)[4]))
+        goal = np.array(list(p.getBasePositionAndOrientation(cube)[0]))
+        dist = np.linalg.norm(end_factor_pos - goal)
+        print(dist)
+
         #print(desired_joint_positions, joint_positions)
         p.stepSimulation()
 
