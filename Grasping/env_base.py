@@ -168,7 +168,7 @@ class BaseEnv:
     
 
         #reward -= 0.1 * np.square(a).sum()
-        print(reward)
+        #print(reward)
         return reward, dist, done
 
     def get_obs(self):
