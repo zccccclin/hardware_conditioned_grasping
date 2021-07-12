@@ -32,11 +32,11 @@ def main(robot):
 
     if robot == 1:
         robot_id = p.loadURDF("../../assets/ur5_w_gripper/2f_1j.urdf", robot_pos, useFixedBase=True)
-        act_joint_indices = [0,1,2,3,4,5,9,11]
+        act_joint_indices = [0,1,2,3,4,5,9,12]
         simulate=True
     elif robot == 2:
         robot_id = p.loadURDF("../../assets/ur5_w_gripper/2f_2j.urdf", robot_pos, useFixedBase=True)
-        act_joint_indices = [0,1,2,3,4,5,9,11,13,15]
+        act_joint_indices = [0,1,2,3,4,5,9,11,14,16]
         simulate=True
     elif robot == 3:
         robot_id = p.loadURDF("../../assets/ur5_w_gripper/3f_1j.urdf", robot_pos, useFixedBase=True)
@@ -44,45 +44,46 @@ def main(robot):
         simulate=True
     elif robot == 4:
         robot_id = p.loadURDF("../../assets/ur5_w_gripper/3f_2j.urdf", robot_pos, useFixedBase=True)
-        act_joint_indices = [0,1,2,3,4,5,9,11,13,15,17,19]
+        act_joint_indices = [0,1,2,3,4,5,9,11,14,16,19,21]
         simulate=True
     desired_joint_positions = reset(robot_id,act_joint_indices)
     gripper_act = np.zeros(len(act_joint_indices[6:]))
     desired_joint_positions = np.concatenate([desired_joint_positions,gripper_act])
 
-
+    for i in range(p.getNumJoints(robot_id)):
+        print(p.getJointInfo(robot_id, i))
 
     while simulate:
         time.sleep(0.01)
         move_factor = 0.01
         joint_states = p.getJointStates(robot_id, act_joint_indices)
         hand_pose = list(p.getLinkState(robot_id, 7)[4])
-        if keyboard.is_pressed('i'):
+        if keyboard.is_pressed('i') and hand_pose[0] <= .725:
             hand_pose[0] += move_factor
             desired_joint_positions = p.calculateInverseKinematics(robot_id,end_factor,hand_pose,[1,1,0,0],lowerLimits=ll, upperLimits=ul, residualThreshold=1e-5 )[:6]
             desired_joint_positions = np.concatenate([desired_joint_positions,gripper_act])
 
-        elif keyboard.is_pressed('k'):
+        elif keyboard.is_pressed('k') and hand_pose[0] >= .575:
             hand_pose[0] -= move_factor
             desired_joint_positions = p.calculateInverseKinematics(robot_id,end_factor,hand_pose,[1,1,0,0],lowerLimits=ll, upperLimits=ul, residualThreshold=1e-5 )[:6]
             desired_joint_positions = np.concatenate([desired_joint_positions,gripper_act])
 
-        elif keyboard.is_pressed('j'):
+        elif keyboard.is_pressed('j') and hand_pose[1] >= -.15:
             hand_pose[1] -= move_factor
             desired_joint_positions = p.calculateInverseKinematics(robot_id,end_factor,hand_pose,[1,1,0,0],lowerLimits=ll, upperLimits=ul, residualThreshold=1e-5 )[:6]
             desired_joint_positions = np.concatenate([desired_joint_positions,gripper_act])
 
-        elif keyboard.is_pressed('l'):
+        elif keyboard.is_pressed('l') and hand_pose[1] <= .15:
             hand_pose[1] += move_factor
             desired_joint_positions = p.calculateInverseKinematics(robot_id,end_factor,hand_pose,[1,1,0,0],lowerLimits=ll, upperLimits=ul, residualThreshold=1e-5 )[:6]
             desired_joint_positions = np.concatenate([desired_joint_positions,gripper_act])
 
-        elif keyboard.is_pressed('8'):
+        elif keyboard.is_pressed('8') and hand_pose[2] <= .3:
             hand_pose[2] += move_factor
             desired_joint_positions = p.calculateInverseKinematics(robot_id,end_factor,hand_pose,[1,1,0,0],lowerLimits=ll, upperLimits=ul, residualThreshold=1e-5 )[:6]
             desired_joint_positions = np.concatenate([desired_joint_positions,gripper_act])
 
-        elif keyboard.is_pressed('m'):
+        elif keyboard.is_pressed('m') and hand_pose[2] >= .1:
             hand_pose[2] -= move_factor
             desired_joint_positions = p.calculateInverseKinematics(robot_id,7,hand_pose,[1,1,0,0],lowerLimits=ll, upperLimits=ul, residualThreshold=1e-5 )[:6]
             desired_joint_positions = np.concatenate([desired_joint_positions,gripper_act])
@@ -103,7 +104,7 @@ def main(robot):
             targetPositions=desired_joint_positions
             #forces=torque,
         )
-        #print(p.getBasePositionAndOrientation(goal)[0], p.getLinkState(robot_id,6)[0])
+        #print(p.getLinkState(robot_id,6)[0])
         #print(desired_joint_positions, joint_positions)
         p.stepSimulation()
 

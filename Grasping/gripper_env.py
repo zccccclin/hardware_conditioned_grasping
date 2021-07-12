@@ -22,6 +22,8 @@ class GripperEnv(BaseEnv):
                          train=train,
                          with_kin=with_kin)
 
+    
+
     def reset(self, robot_id=0): #change 0 to None for multi
         if robot_id is None:
             self.robot_id = np.random.randint(0, self.train_robot_num, 1)[0]
@@ -37,16 +39,20 @@ class GripperEnv(BaseEnv):
     def step(self, action):
         scaled_action = self.scale_action(action)
         hand_pose = np.array(p.getLinkState(self.sim, 7)[4])
-        hand_pose += scaled_action[:3]
+        if .575 <= hand_pose[0] + scaled_action[0] <= .725:
+            hand_pose[0] += scaled_action[0]
+        elif -.15 <= hand_pose[1] + scaled_action[1] <= .15:
+            hand_pose[1] += scaled_action[1]
+        elif .1 <= hand_pose[2] + scaled_action[2] <= .3:
+            hand_pose[2] += scaled_action[2]
         desired_joint_positions = p.calculateInverseKinematics(
                                             self.sim, self.end_factor,
                                             hand_pose,[1,1,0,0],
                                             lowerLimits=self.ll, upperLimits=self.ul, residualThreshold=1e-5 )[:6]
-        gripper1_pos = p.getJointState(self.sim,6)[0]
-        gripper2_pos = p.getJointState(self.sim,7)[0]
-        gripper_act = np.array([gripper1_pos + action[3]])*50
-        desired_joint_positions = np.concatenate([desired_joint_positions, gripper_act, gripper_act])
-        
+        gripper_pos = p.getJointState(self.sim,6)[0]
+        gripper_act = np.array([gripper_pos + action[3]])*3.1415 * np.ones(len(self.act_joint_indices[6:]))
+        desired_joint_positions = np.concatenate([desired_joint_positions, gripper_act])
+        print(desired_joint_positions)
         p.setJointMotorControlArray(
             bodyIndex=self.sim,
             jointIndices=self.act_joint_indices,
@@ -60,7 +66,7 @@ class GripperEnv(BaseEnv):
             time.sleep(0.05)
 
         ob = self.get_obs()
-        re_target = np.array([0,0,.3])
+        re_target = np.array([0,0,.25])
         re_target = np.concatenate([ob[1][3:], re_target])
 
         reward, dist, done = self.cal_reward(ob[1],

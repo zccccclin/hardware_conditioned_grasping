@@ -127,6 +127,13 @@
             </geometry>
         </visual>
     </link>
+    <link name='f13_slot'>
+        <visual>
+            <geometry>
+                <sphere radius='.015'/>
+            </geometry>
+        </visual>
+    </link>
     <link name='f21_base'>
         <visual>
             <origin xyz='0 0 0'/>
@@ -136,6 +143,13 @@
         </visual>
     </link>
     <link name='f22_slot'>
+        <visual>
+            <geometry>
+                <sphere radius='.015'/>
+            </geometry>
+        </visual>
+    </link>
+    <link name='f23_slot'>
         <visual>
             <geometry>
                 <sphere radius='.015'/>
@@ -189,6 +203,11 @@
         <parent link='f11'/>
         <child link='f12_slot'/>
     </joint>
+    <joint name='f13_slot_joint' type="fixed">
+        <origin xyz="0 0 .05" rpy="0 0 0"/>
+        <parent link='f12'/>
+        <child link='f13_slot'/>
+    </joint>
     <joint name='f21_base_joint' type="fixed">
         <origin xyz="-.05 -0.0 .0" rpy="0 0 0"/>
         <parent link='palm'/>
@@ -199,5 +218,9 @@
         <parent link='f21'/>
         <child link='f22_slot'/>
     </joint>
-    
+    <joint name='f23_slot_joint' type="fixed">
+        <origin xyz="0 0 .05" rpy="0 0 0"/>
+        <parent link='f22'/>
+        <child link='f23_slot'/>
+    </joint>
 </robot>

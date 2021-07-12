@@ -32,8 +32,8 @@ class BaseEnv:
         self.dist_tol = tol
         self.pc = bullet_client.BulletClient(p.GUI if render else p.DIRECT)
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
-        self.ll = [-.5, -2, -.5, -1.57, -1.57, -1.57]
-        self.ul = [.5, 0, 1.57, 1.54, 1.57, 1.57]
+        self.ll = [-3.14, -3.14, -3.14, -3.14, -3.14, -3.14]
+        self.ul = [3.14, 0, 3.14, 3.14, 3.14, 3.14]
         self.end_factor = 7
 
         self.robots = []
@@ -123,12 +123,12 @@ class BaseEnv:
         
         #self.robot_folder_id = self.dir2id[self.robots[robot_id]]
         #robot_file = os.path.join(self.robots[robot_id], 'model.urdf')
-        robot_file = '../assets/ur5_w_gripper/2f_1j.urdf'
+        robot_file = '../assets/ur5_w_gripper/3f_2j.urdf'
         p.resetSimulation()
         p.setGravity(0,0,-9.81)
         robot_pose = [0,0,0]
-        cube_pose = [.7, 0, 0.03]
-        self.act_joint_indices = [0,1,2,3,4,5,9,11]
+        cube_pose = [.65, 0, 0.03]
+        self.act_joint_indices = [0,1,2,3,4,5,9,11,14,16,19,21]
 
         self.sim = p.loadURDF(robot_file, basePosition=robot_pose,
                               useFixedBase=1, physicsClientId=self.pc._client)
@@ -167,7 +167,7 @@ class BaseEnv:
         joint_states = p.getJointStates(self.sim, self.act_joint_indices[6:])
         gripper_qpos = np.array([j[0] for j in joint_states])
 
-        height_target = np.array([0,0,.3])
+        height_target = np.array([0,0,.25])
         ob = np.concatenate([gripper_qpos, endfactor_pos, height_target])
 
         
@@ -189,6 +189,39 @@ class BaseEnv:
                                   6)
         return qpos, qvel
 
+    def get_xpos_xrot(self, sim):
+        xpos = []
+        xrot = []
+        for joint_id in range(self.act_dim):
+            joint = sim.model._actuator_id2name[joint_id]
+            if joint == 'j0':   
+                pos1 = sim.data.get_body_xpos('base_link')
+                mat1 = sim.data.get_body_xmat('base_link')
+            else:
+                prev_id = joint_id - 1
+                prev_joint = sim.model._actuator_id2name[prev_id]
+                pos1 = sim.data.get_site_xpos(prev_joint)
+                mat1 = sim.data.get_site_xmat(prev_joint)
+            pos2 = sim.data.get_site_xpos(joint)
+            mat2 = sim.data.get_site_xmat(joint)
+            relative_pos = pos2 - pos1
+            rot_euler = self.relative_rotation(mat1, mat2)
+            xpos.append(relative_pos)
+            xrot.append(rot_euler)
+        xpos = np.array(xpos).flatten()
+        xrot = np.array(xrot).flatten()
+        xpos = np.pad(xpos, (0, (7 - self.act_dim) * 3),
+                      mode='constant', constant_values=0)
+        xrot = np.pad(xrot, (0, (7 - self.act_dim) * 3),
+                      mode='constant', constant_values=0)
+        ref_pt_xpos = self.sim.data.get_site_xpos('ref_pt')
+        ref_pt_xmat = self.sim.data.get_site_xmat('ref_pt')
+        relative_pos = ref_pt_xpos - pos2
+        rot_euler = self.relative_rotation(mat2, ref_pt_xmat)
+        xpos = np.concatenate((xpos, relative_pos.flatten()))
+        xrot = np.concatenate((xrot, rot_euler.flatten()))
+        pos_rot = np.concatenate((xpos, xrot))
+        return pos_rot
 
 
     def relative_rotation(self, mat1, mat2):

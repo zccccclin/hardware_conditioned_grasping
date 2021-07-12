@@ -115,7 +115,27 @@
             </geometry>
         </visual>
     </link>
-
+    <link name='f12_slot'>
+        <visual>
+            <geometry>
+                <sphere radius='.015'/>
+            </geometry>
+        </visual>
+    </link>
+    <link name='f22_slot'>
+        <visual>
+            <geometry>
+                <sphere radius='.015'/>
+            </geometry>
+        </visual>
+    </link>
+    <link name='f32_slot'>
+        <visual>
+            <geometry>
+                <sphere radius='.015'/>
+            </geometry>
+        </visual>
+    </link>
     <joint name='f11_joint' type="revolute">
         <origin xyz="0 0 .0" rpy="0 .25 0"/>
         <parent link='f11_base'/>
@@ -159,5 +179,19 @@
         <parent link='palm'/>
         <child link='f31_base'/>
     </joint>
-
+    <joint name='f12_slot_joint' type="fixed">
+        <origin xyz="0 0 .1" rpy="0 0 0"/>
+        <parent link='f11'/>
+        <child link='f12_slot'/>
+    </joint>
+    <joint name='f22_slot_joint' type="fixed">
+        <origin xyz="0 0 .1" rpy="0 0 0"/>
+        <parent link='f21'/>
+        <child link='f22_slot'/>
+    </joint>
+    <joint name='f32_slot_joint' type="fixed">
+        <origin xyz="0 0 .1" rpy="0 0 0"/>
+        <parent link='f31'/>
+        <child link='f32_slot'/>
+    </joint>
 </robot>

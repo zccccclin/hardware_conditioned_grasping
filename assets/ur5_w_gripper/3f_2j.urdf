@@ -57,7 +57,7 @@
     <child link="upper_arm_link"/>
     <origin rpy="0.0 1.57079632679 0.0" xyz="0.0 0.13585 0.0"/>
     <axis xyz="0 1 0"/>
-    <limit effort="150.0" lower="-2" upper="0" velocity="3.15"/>
+    <limit effort="150.0" lower="-3.14" upper="3.14" velocity="3.15"/>
     <dynamics damping="0.0" friction="0.0"/>
   </joint>
   <link name="upper_arm_link">
@@ -420,7 +420,27 @@
             </geometry>
         </visual>
     </link>
-
+    <link name='f13_slot'>
+        <visual>
+            <geometry>
+                <sphere radius='.015'/>
+            </geometry>
+        </visual>
+    </link>
+    <link name='f23_slot'>
+        <visual>
+            <geometry>
+                <sphere radius='.015'/>
+            </geometry>
+        </visual>
+    </link>
+    <link name='f33_slot'>
+        <visual>
+            <geometry>
+                <sphere radius='.015'/>
+            </geometry>
+        </visual>
+    </link>
     <joint name='f11_joint' type="revolute">
         <origin xyz="0 0 .0" rpy="0 .25 0"/>
         <parent link='f11_base'/>
@@ -502,6 +522,21 @@
         <origin xyz="0 0 .05" rpy="0 0 0"/>
         <parent link='f31'/>
         <child link='f32_slot'/>
+    </joint>
+    <joint name='f13_slot_joint' type="fixed">
+        <origin xyz="0 0 .05" rpy="0 0 0"/>
+        <parent link='f12'/>
+        <child link='f13_slot'/>
+    </joint>
+    <joint name='f23_slot_joint' type="fixed">
+        <origin xyz="0 0 .05" rpy="0 0 0"/>
+        <parent link='f22'/>
+        <child link='f23_slot'/>
+    </joint>
+    <joint name='f33_slot_joint' type="fixed">
+        <origin xyz="0 0 .05" rpy="0 0 0"/>
+        <parent link='f32'/>
+        <child link='f33_slot'/>
     </joint>
 </robot>
 

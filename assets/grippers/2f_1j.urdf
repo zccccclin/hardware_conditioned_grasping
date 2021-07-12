@@ -67,8 +67,20 @@
             <contact_coefficients kd="1.0" kp="10000.0" mu="1"/>
         </collision>
     </link>
-
-
+    <link name='f12_slot'>
+        <visual>
+            <geometry>
+                <sphere radius='.015'/>
+            </geometry>
+        </visual>
+    </link>
+    <link name='f22_slot'>
+        <visual>
+            <geometry>
+                <sphere radius='.015'/>
+            </geometry>
+        </visual>
+    </link>
     <link name='f11_base'>
         <visual>
             <origin xyz='0 0 0'/>
@@ -111,12 +123,20 @@
         <parent link='palm'/>
         <child link='f11_base'/>
     </joint>
-
+    <joint name='f12_slot_joint' type="fixed">
+        <origin xyz="0 0 .1" rpy="0 0 0"/>
+        <parent link='f11'/>
+        <child link='f12_slot'/>
+    </joint>
     <joint name='f21_base_joint' type="fixed">
         <origin xyz="-.05 -0.0 .0" rpy="0 0 0"/>
         <parent link='palm'/>
         <child link='f21_base'/>
     </joint>
-
+    <joint name='f22_slot_joint' type="fixed">
+        <origin xyz="0 0 .1" rpy="0 0 0"/>
+        <parent link='f21'/>
+        <child link='f22_slot'/>
+    </joint>
     
 </robot>
