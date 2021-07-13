@@ -123,7 +123,7 @@ class BaseEnv:
         
         #self.robot_folder_id = self.dir2id[self.robots[robot_id]]
         #robot_file = os.path.join(self.robots[robot_id], 'model.urdf')
-        robot_file = '../assets/ur5_w_gripper/3f_2j.urdf'
+        robot_file = '../assets/3f_2j.urdf'
         p.resetSimulation()
         p.setGravity(0,0,-9.81)
         robot_pose = [0,0,0]
@@ -151,7 +151,6 @@ class BaseEnv:
     def cal_reward(self, s, goal, a ):
         reached = np.linalg.norm(s[:3] - goal[:3])
         dist = np.linalg.norm(s[3:] - goal[3:])
-        final_dist = [reached, dist]
         if dist < self.dist_tol and reached < 0.065:
             done = True
             reward_dist = 10
@@ -165,11 +164,11 @@ class BaseEnv:
             done = False
             reward_dist = -1
         reward = reward_dist
-    
+        final_dist = dist + reached
 
         #reward -= 0.1 * np.square(a).sum()
         #print(reward)
-        return reward, dist, done
+        return reward, final_dist, done
 
     def get_obs(self):
         endfactor_pos  = np.array((p.getLinkState(self.sim, self.end_factor)[4]))

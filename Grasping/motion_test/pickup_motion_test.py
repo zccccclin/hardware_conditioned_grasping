@@ -43,7 +43,7 @@ def main(robot):
         act_joint_indices = [0,1,2,3,4,5,9,11,13]
         simulate=True
     elif robot == 4:
-        robot_id = p.loadURDF("../../assets/ur5_w_gripper/3f_2j.urdf", robot_pos, useFixedBase=True)
+        robot_id = p.loadURDF("../../assets/3f_2j.urdf", robot_pos, useFixedBase=True)
         act_joint_indices = [0,1,2,3,4,5,9,11,14,16,19,21]
         simulate=True
     desired_joint_positions = reset(robot_id,act_joint_indices)
