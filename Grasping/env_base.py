@@ -165,7 +165,6 @@ class BaseEnv:
             reward_dist = -1
         reward = reward_dist
         final_dist = dist + reached
-        print(reward, dist, reached, final_dist)
 
         #reward -= 0.1 * np.square(a).sum()
         #print(reward)
