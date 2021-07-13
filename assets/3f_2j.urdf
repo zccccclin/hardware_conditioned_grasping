@@ -412,7 +412,7 @@
   </link>
   <joint name="shoulder_pan_joint" type="revolute">
     <dynamics damping="0.0" friction="0.0"/>
-    <limit effort="150.0" velocity="3.15" lower="-3.142" upper="3.142"/>
+    <limit effort="150.0" velocity="3.15" lower="-3.14159265359" upper="3.14159265359"/>
     <parent link="base_link"/>
     <child link="shoulder_link"/>
     <axis xyz="0 0 1"/>
@@ -420,7 +420,7 @@
   </joint>
   <joint name="shoulder_lift_joint" type="revolute">
     <dynamics damping="0.0" friction="0.0"/>
-    <limit effort="150.0" velocity="3.15" lower="-3.14" upper="3.14"/>
+    <limit effort="150.0" velocity="3.15" lower="-3.14159265359" upper="3.14159265359"/>
     <parent link="shoulder_link"/>
     <child link="upper_arm_link"/>
     <axis xyz="0 1 0"/>

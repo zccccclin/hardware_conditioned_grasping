@@ -65,9 +65,8 @@ class GripperEnv(BaseEnv):
             time.sleep(0.05)
 
         ob = self.get_obs()
-        re_target = np.array([0,0,.25])
+        re_target = np.array([.65,0,.25])
         re_target = np.concatenate([ob[1][3:], re_target])
-
         reward, dist, done = self.cal_reward(ob[1],
                                              re_target,
                                              action)

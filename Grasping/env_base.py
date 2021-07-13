@@ -1,6 +1,6 @@
 import json
 import os
-from typing import Sized, final
+from typing import Sized
 
 import numpy as np
 import gym
@@ -33,7 +33,7 @@ class BaseEnv:
         self.pc = bullet_client.BulletClient(p.GUI if render else p.DIRECT)
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
         self.ll = [-3.14, -3.14, -3.14, -3.14, -3.14, -3.14]
-        self.ul = [3.14, 0, 3.14, 3.14, 3.14, 3.14]
+        self.ul = [3.14, 3.14, 3.14, 3.14, 3.14, 3.14]
         self.end_factor = 7
 
         self.robots = []
@@ -165,6 +165,7 @@ class BaseEnv:
             reward_dist = -1
         reward = reward_dist
         final_dist = dist + reached
+        print(reward, dist, reached, final_dist)
 
         #reward -= 0.1 * np.square(a).sum()
         #print(reward)
@@ -175,7 +176,7 @@ class BaseEnv:
         joint_states = p.getJointStates(self.sim, self.act_joint_indices[6:])
         gripper_qpos = np.array([j[0] for j in joint_states])
 
-        height_target = np.array([0,0,.25])
+        height_target = np.array([.65, 0,.25])
         ob = np.concatenate([gripper_qpos, endfactor_pos, height_target])
 
         
