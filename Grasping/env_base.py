@@ -108,7 +108,7 @@ class BaseEnv:
     '''
     
     def update_action_space(self):
-        self.ctrl_high = np.ones(4)
+        self.ctrl_high = np.ones(4) * 0.05
         self.ctrl_low = -self.ctrl_high
         self.action_space = spaces.Box(self.ctrl_low, self.ctrl_high, dtype=np.float32)
 
@@ -166,7 +166,6 @@ class BaseEnv:
         reward = reward_dist
         final_dist = [reached,dist]
         #reward -= 0.1 * np.square(a).sum()
-        #print(reward, dist)
         return reward, final_dist, done
 
     def get_obs(self):

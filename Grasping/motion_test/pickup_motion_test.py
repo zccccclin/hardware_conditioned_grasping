@@ -55,7 +55,7 @@ def main(robot):
 
     while simulate:
         time.sleep(0.01)
-        move_factor = 0.01
+        move_factor = 0.05
         joint_states = p.getJointStates(robot_id, act_joint_indices)
         hand_pose = list(p.getLinkState(robot_id, 7)[4])
         if keyboard.is_pressed('i') and hand_pose[0] <= .725:
