@@ -41,10 +41,11 @@ class GripperEnv(BaseEnv):
         hand_pose = np.array(p.getLinkState(self.sim, 7)[4])
         if .575 <= hand_pose[0] + scaled_action[0] <= .725:
             hand_pose[0] += scaled_action[0]
-        elif -.15 <= hand_pose[1] + scaled_action[1] <= .15:
+        if -.15 <= hand_pose[1] + scaled_action[1] <= .15:
             hand_pose[1] += scaled_action[1]
-        elif .1 <= hand_pose[2] + scaled_action[2] <= .3:
+        if .0 <= hand_pose[2] + scaled_action[2] <= .3:
             hand_pose[2] += scaled_action[2]
+            
         desired_joint_positions = p.calculateInverseKinematics(
                                             self.sim, self.end_factor,
                                             hand_pose,[1,1,0,0],
