@@ -164,11 +164,10 @@ class BaseEnv:
             done = False
             reward_dist = -1
         reward = reward_dist
-        final_dist = dist + reached
 
         #reward -= 0.1 * np.square(a).sum()
-        #print(reward)
-        return reward, final_dist, done
+        print(reward, dist)
+        return reward, dist, done
 
     def get_obs(self):
         endfactor_pos  = np.array((p.getLinkState(self.sim, self.end_factor)[4]))
