@@ -32,9 +32,6 @@ class BaseEnv:
         self.dist_tol = tol
         self.pc = bullet_client.BulletClient(p.GUI if render else p.DIRECT)
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
-        self.ll = [-3.14, -3.14, -3.14, -3.14, -3.14, -3.14]
-        self.ul = [3.14, 3.14, 3.14, 3.14, 3.14, 3.14]
-        self.end_factor = 7
 
         self.robots = []
         for folder in robot_folders:
@@ -42,7 +39,7 @@ class BaseEnv:
 
         self.dir2id = {folder: idx for idx, folder in enumerate(self.robots)}
         self.robot_num = len(self.robots)
-        
+        self.act_joint_indices=[2,4,7,9,12,14]
         if train:
             self.test_robot_num = 1 #min(10, self.robot_num)
             self.train_robot_num = self.robot_num - self.test_robot_num
@@ -80,18 +77,6 @@ class BaseEnv:
     def step(self, action):
         raise NotImplementedError
     
-    def reset_robot_pose(self, robot_id, act_joint_indices):
-        desired_joint_positions = [-0.184, -1.09, 1.497, -1.98, -1.5715, 1.38]
-        p.setJointMotorControlArray(
-            bodyIndex=robot_id,
-            jointIndices=act_joint_indices[:6],
-            controlMode=p.POSITION_CONTROL,
-            targetPositions=desired_joint_positions
-            #forces=torque,
-        )
-        for i in range(20):
-            p.stepSimulation()
-        return desired_joint_positions
     '''
     def update_link_data(self):
         self.robot_name = p.getBodyInfo(self.sim)[1].decode('UTF-8')
@@ -108,7 +93,7 @@ class BaseEnv:
     '''
     
     def update_action_space(self):
-        self.ctrl_high = np.ones(4) * 0.1
+        self.ctrl_high = np.ones(2) 
         self.ctrl_low = -self.ctrl_high
         self.action_space = spaces.Box(self.ctrl_low, self.ctrl_high, dtype=np.float32)
 
@@ -117,25 +102,24 @@ class BaseEnv:
         act_k = (self.action_space.high - self.action_space.low)/2.
         act_b = (self.action_space.high + self.action_space.low)/2.
         #print(act_k * action + act_b)
-        return act_k * action + act_b
+        #return act_k * action + act_b
+        return [.01 if b>0 else -.01 for b in action]
 
     def reset_robot(self, robot_id):
         
         #self.robot_folder_id = self.dir2id[self.robots[robot_id]]
         #robot_file = os.path.join(self.robots[robot_id], 'model.urdf')
-        robot_file = '../assets/3f_2j.urdf'
+        robot_file = '../assets/grippers/one_direction.urdf'
         p.resetSimulation()
         p.setGravity(0,0,-9.81)
-        robot_pose = [0,0,0]
-        cube_pose = [.65, 0, 0.03]
-        self.act_joint_indices = [0,1,2,3,4,5,9,11,14,16,19,21]
+        robot_pose = [0,0,0.1]
+        cube_pose = [0, 0, 0.03]
 
-        self.sim = p.loadURDF(robot_file, basePosition=robot_pose,
+        self.sim = p.loadURDF(robot_file, basePosition=robot_pose, baseOrientation=[1, 1, 0, 0],
                               useFixedBase=1, physicsClientId=self.pc._client)
-        self.reset_robot_pose(self.sim, self.act_joint_indices)
+        p.setJointMotorControl2(self.sim,0,p.POSITION_CONTROL,targetPosition=-.1)
+        p.stepSimulation()
         self.plane = p.loadURDF("plane.urdf")
-        #self.tray = p.loadURDF('tray/tray.urdf', [.7, 0, 0],[0,0,1,1],useFixedBase=True,)
-
         self.cube = p.loadURDF('cube_small.urdf', cube_pose,) #globalScaling=2)
 
         self.update_action_space()
@@ -151,16 +135,15 @@ class BaseEnv:
     def cal_reward(self, s, goal, a ):
         reached = np.linalg.norm(s[:3] - goal[:3])
         dist = np.linalg.norm(s[3:] - goal[3:])
-        
         if dist < self.dist_tol and reached < 0.065:
             done = True
             reward_dist = 10 #1
         elif reached < 0.075:
             done = False
-            reward_dist = 1 #-dist
-        elif reached > 0.25:
-            done = False
-            reward_dist = -10
+            reward_dist = 1#-dist
+        elif reached > 0.2:
+            done=False
+            reward_dist= -10
         else:
             done = False
             reward_dist = -1 #-reached + -dist
@@ -168,20 +151,20 @@ class BaseEnv:
         final_dist = [reached,dist]
         #print(reward)
         #reward -= 0.1 * np.square(a).sum()
+
         return reward, final_dist, done
 
     def get_obs(self):
-        endfactor_pos  = np.array((p.getLinkState(self.sim, self.end_factor)[4]))
-        joint_states = p.getJointStates(self.sim, self.act_joint_indices[6:])
+        joint_states = p.getJointStates(self.sim, self.act_joint_indices)
         gripper_qpos = np.array([j[0] for j in joint_states])
 
-        height_target = np.array([.65, 0,.25])
-        
+        height_target = np.array([0, 0, .25])
+        end_factor = np.array(p.getLinkState(self.sim,0)[4])
 
         
         ref_point = np.array(p.getBasePositionAndOrientation(self.cube)[0])
-        ob = np.concatenate([gripper_qpos, endfactor_pos, ref_point, height_target])
-        ref_point = np.concatenate([endfactor_pos,ref_point])
+        ob = np.concatenate([gripper_qpos, height_target])
+        ref_point = np.concatenate([end_factor,ref_point])
         return ob, ref_point
 
     def get_qpos_qvel(self, sim):
@@ -198,39 +181,7 @@ class BaseEnv:
                                   6)
         return qpos, qvel
 
-    def get_xpos_xrot(self, sim):
-        xpos = []
-        xrot = []
-        for joint_id in range(self.act_dim):
-            joint = sim.model._actuator_id2name[joint_id]
-            if joint == 'j0':   
-                pos1 = sim.data.get_body_xpos('base_link')
-                mat1 = sim.data.get_body_xmat('base_link')
-            else:
-                prev_id = joint_id - 1
-                prev_joint = sim.model._actuator_id2name[prev_id]
-                pos1 = sim.data.get_site_xpos(prev_joint)
-                mat1 = sim.data.get_site_xmat(prev_joint)
-            pos2 = sim.data.get_site_xpos(joint)
-            mat2 = sim.data.get_site_xmat(joint)
-            relative_pos = pos2 - pos1
-            rot_euler = self.relative_rotation(mat1, mat2)
-            xpos.append(relative_pos)
-            xrot.append(rot_euler)
-        xpos = np.array(xpos).flatten()
-        xrot = np.array(xrot).flatten()
-        xpos = np.pad(xpos, (0, (7 - self.act_dim) * 3),
-                      mode='constant', constant_values=0)
-        xrot = np.pad(xrot, (0, (7 - self.act_dim) * 3),
-                      mode='constant', constant_values=0)
-        ref_pt_xpos = self.sim.data.get_site_xpos('ref_pt')
-        ref_pt_xmat = self.sim.data.get_site_xmat('ref_pt')
-        relative_pos = ref_pt_xpos - pos2
-        rot_euler = self.relative_rotation(mat2, ref_pt_xmat)
-        xpos = np.concatenate((xpos, relative_pos.flatten()))
-        xrot = np.concatenate((xrot, rot_euler.flatten()))
-        pos_rot = np.concatenate((xpos, xrot))
-        return pos_rot
+
 
 
     def relative_rotation(self, mat1, mat2):

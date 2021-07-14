@@ -10,7 +10,7 @@ arm = p.loadURDF('../ur5/model.urdf', useFixedBase=1, )
 linkpos = p.getLinkState(arm,6)[4]
 p.loadURDF("plane.urdf")
 
-hand = p.loadURDF('2f_1j.urdf',linkpos)
+hand = p.loadURDF('one_direction.urdf',linkpos)
 cube = p.loadURDF('cube_small.urdf', [.65,0,0])
 
 p.createConstraint(arm,6,hand,-1,p.JOINT_FIXED,[0,1,0],[0,0,0],[0,0,.1])

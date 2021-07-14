@@ -38,26 +38,20 @@ class GripperEnv(BaseEnv):
         
     def step(self, action):
         scaled_action = self.scale_action(action)
-        hand_pose = np.array(p.getLinkState(self.sim, 7)[4])
-        if .575 <= hand_pose[0] + scaled_action[0] <= .725:
-            hand_pose[0] += scaled_action[0]
-        if -.15 <= hand_pose[1] + scaled_action[1] <= .15:
-            hand_pose[1] += scaled_action[1]
-        if .1 <= hand_pose[2] + scaled_action[2] <= .3:
-            hand_pose[2] += scaled_action[2]
-        print(hand_pose)
-        desired_joint_positions = p.calculateInverseKinematics(
-                                            self.sim, self.end_factor,
-                                            hand_pose,[1,1,0,0],
-                                            lowerLimits=self.ll, upperLimits=self.ul, residualThreshold=1e-5 )[:6]
-        gripper_pos = p.getJointState(self.sim,6)[0]
-        gripper_act = np.array([gripper_pos + action[3]])*3.1415 * np.ones(len(self.act_joint_indices[6:]))
-        desired_joint_positions = np.concatenate([desired_joint_positions, gripper_act])
+        hand_height = np.array(p.getJointState(self.sim, 0)[0])
+        #print(hand_height, scaled_action)
+
+        if -.3 <= (hand_height + scaled_action[0]) <= .01:
+            hand_height += scaled_action[0]
+        #print(scaled_action)
+        p.setJointMotorControl2(self.sim, 0, p.POSITION_CONTROL, targetPosition=hand_height)
+        gripper_pos = p.getJointState(self.sim,2)[0]
+        gripper_act = np.array([gripper_pos + scaled_action[1]*10])* np.ones(len(self.act_joint_indices))
         p.setJointMotorControlArray(
             bodyIndex=self.sim,
             jointIndices=self.act_joint_indices,
             controlMode=p.POSITION_CONTROL,
-            targetPositions=desired_joint_positions
+            targetPositions=gripper_act
             #forces=torque,
         )
         p.stepSimulation()
@@ -66,7 +60,7 @@ class GripperEnv(BaseEnv):
             time.sleep(0.05)
 
         ob = self.get_obs()
-        re_target = np.array([.65,0,.25])
+        re_target = np.array([0,0,.25])
         re_target = np.concatenate([ob[1][3:], re_target])
         reward, dist, done = self.cal_reward(ob[1],
                                              re_target,
