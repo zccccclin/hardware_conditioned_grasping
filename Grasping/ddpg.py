@@ -235,6 +235,7 @@ class DDPG:
 
                 # self.log_model_weights()
                 logger.dumpkvs()
+                print(mean_final_dist, self.closest_dist, epoch)
                 if mean_final_dist < self.closest_dist:
                     self.closest_dist = mean_final_dist
                     is_best = True
