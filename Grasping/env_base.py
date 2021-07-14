@@ -156,13 +156,11 @@ class BaseEnv:
             reward_dist = 1
         elif reached < 0.075:
             done = False
-            reward_dist = 0
-        elif reached > .22:
-            done = False
-            reward_dist = -10
+            reward_dist = -dist
+
         else:
             done = False
-            reward_dist = -1
+            reward_dist = -reached + -dist
         reward = reward_dist
         final_dist = [reached,dist]
         #reward -= 0.1 * np.square(a).sum()
