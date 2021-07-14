@@ -172,10 +172,11 @@ class BaseEnv:
         gripper_qpos = np.array([j[0] for j in joint_states])
 
         height_target = np.array([.65, 0,.25])
-        ob = np.concatenate([gripper_qpos, endfactor_pos, height_target])
+        
 
         
         ref_point = np.array(p.getBasePositionAndOrientation(self.cube)[0])
+        ob = np.concatenate([gripper_qpos, endfactor_pos, ref_point, height_target])
         ref_point = np.concatenate([endfactor_pos,ref_point])
         return ob, ref_point
 
