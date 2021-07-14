@@ -41,7 +41,7 @@ class DDPG:
         self.closest_dist_reached = np.inf
         self.warmup_iter = args.warmup_iter
         self.max_grad_norm = args.max_grad_norm
-        self.use_her = args.her
+        self.use_her = False #args.her
         self.k_future = args.k_future
         self.model_dir = os.path.join(args.save_dir, 'model')
         self.pretrain_dir = args.pretrain_dir

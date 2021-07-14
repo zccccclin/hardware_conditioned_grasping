@@ -23,7 +23,7 @@ class DDPG:
         goal_dim = env.goal_dim
         ob_dim = ob_space.shape[0]
         self.ob_dim = ob_dim
-        self.ac_dim = ac_dim = 6
+        self.ac_dim = ac_dim = 4
         self.goal_dim = goal_dim
         self.num_iters = args.num_iters
         self.random_prob = args.random_prob
@@ -135,7 +135,6 @@ class DDPG:
             obs = obs[0]
             epoch_actor_losses = []
             epoch_critic_losses = []
-            print('reset done')
             if self.use_her:
                 ep_experi = {'obs': [], 'act': [], 'reward': [],
                              'new_obs': [], 'ach_goals': [], 'done': []}
@@ -164,9 +163,7 @@ class DDPG:
                 if self.ob_norm:
                     self.obs_oms.update(new_obs)
                 obs = new_obs
-                print(t_rollout)
             epoch_episode_rewards.append(episode_reward)
-            print(epoch_episode_rewards)
             epoch_episode_steps.append(episode_step)
             if self.use_her:
                 for t in range(episode_step - self.k_future):
