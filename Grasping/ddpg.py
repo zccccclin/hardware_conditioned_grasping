@@ -185,7 +185,7 @@ class DDPG:
                                                  new_goal),
                                                 axis=0)
 
-                        print(her_ob)
+                        #print(her_ob)
                         her_new_ob = np.concatenate((new_ob[:-self.goal_dim],
                                                      new_goal),
                                                     axis=0)
