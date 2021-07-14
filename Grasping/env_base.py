@@ -153,10 +153,10 @@ class BaseEnv:
         dist = np.linalg.norm(s[3:] - goal[3:])
         if dist < self.dist_tol and reached < 0.065:
             done = True
-            reward_dist = 10
+            reward_dist = 1
         elif reached < 0.075:
             done = False
-            reward_dist = 1
+            reward_dist = 0
         elif reached > .22:
             done = False
             reward_dist = -10
