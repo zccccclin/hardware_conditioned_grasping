@@ -108,7 +108,7 @@ class BaseEnv:
     '''
     
     def update_action_space(self):
-        self.ctrl_high = np.ones(4) * 0.1
+        self.ctrl_high = np.ones(4) 
         self.ctrl_low = -self.ctrl_high
         self.action_space = spaces.Box(self.ctrl_low, self.ctrl_high, dtype=np.float32)
 
@@ -117,7 +117,8 @@ class BaseEnv:
         act_k = (self.action_space.high - self.action_space.low)/2.
         act_b = (self.action_space.high + self.action_space.low)/2.
         #print(act_k * action + act_b)
-        return act_k * action + act_b
+        #return act_k * action + act_b
+        return [.05 if b>0 else -.05 for b in action]
 
     def reset_robot(self, robot_id):
         
@@ -154,16 +155,16 @@ class BaseEnv:
         
         if dist < self.dist_tol and reached < 0.065:
             done = True
-            reward_dist = 10 #1
+            reward_dist = 1
         elif reached < 0.075:
             done = False
-            reward_dist = 1 #-dist
-        elif reached > 0.25:
-            done = False
-            reward_dist = -10
+            reward_dist = -dist
+        #elif reached > 0.25:
+            #done = False
+            #reward_dist = -10
         else:
             done = False
-            reward_dist = -1 #-reached + -dist
+            reward_dist = -reached + -dist
         reward = reward_dist
         final_dist = [reached,dist]
         #print(reward)

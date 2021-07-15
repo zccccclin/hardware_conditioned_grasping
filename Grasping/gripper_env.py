@@ -45,7 +45,6 @@ class GripperEnv(BaseEnv):
             hand_pose[1] += scaled_action[1]
         if .1 <= hand_pose[2] + scaled_action[2] <= .3:
             hand_pose[2] += scaled_action[2]
-        print(hand_pose)
         desired_joint_positions = p.calculateInverseKinematics(
                                             self.sim, self.end_factor,
                                             hand_pose,[1,1,0,0],

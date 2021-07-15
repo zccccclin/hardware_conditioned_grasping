@@ -31,6 +31,7 @@ class DDPG:
         self.reward_scale = args.reward_scale
         self.gamma = args.gamma
 
+
         self.log_interval = args.log_interval
         self.save_interval = args.save_interval
         self.rollout_steps = args.rollout_steps
@@ -41,7 +42,7 @@ class DDPG:
         self.closest_dist_reached = np.inf
         self.warmup_iter = args.warmup_iter
         self.max_grad_norm = args.max_grad_norm
-        self.use_her = False #args.her
+        self.use_her = args.her
         self.k_future = args.k_future
         self.model_dir = os.path.join(args.save_dir, 'model')
         self.pretrain_dir = args.pretrain_dir
@@ -166,6 +167,8 @@ class DDPG:
                     self.obs_oms.update(new_obs)
                 obs = new_obs
             epoch_episode_rewards.append(episode_reward)
+            print(episode_reward)
+            print(epoch_episode_rewards)
             epoch_episode_steps.append(episode_step)
             if self.use_her:
                 for t in range(episode_step - self.k_future):
@@ -240,6 +243,7 @@ class DDPG:
 
                 # self.log_model_weights()
                 logger.dumpkvs()
+
                 if mean_final_dist_reached > 0.075:
                     if mean_final_dist_reached < self.closest_dist_reached:
                         self.closest_dist_reached = mean_final_dist_reached
@@ -254,7 +258,7 @@ class DDPG:
                         print(self.closest_dist)
                     else:
                         is_best = False
-                        
+                
                 self.save_model(is_best=is_best, step=self.global_step)
 
     def train_net(self):
