@@ -2,6 +2,7 @@ import json
 import os
 import time
 from collections import deque
+from typing import final
 
 import numpy as np
 import torch
@@ -40,6 +41,7 @@ class DDPG:
         self.train_steps = args.train_steps
         self.closest_dist = np.inf
         self.closest_dist_reached = np.inf
+        self.best_reward = -np.inf
         self.warmup_iter = args.warmup_iter
         self.max_grad_norm = args.max_grad_norm
         self.use_her = args.her
@@ -118,11 +120,12 @@ class DDPG:
         self.cuda()
 
     def test(self, render=False, record=True, slow_t=0):
-        reached, dist, succ_rate = self.rollout(render=render,
+        reached, dist, r, succ_rate = self.rollout(render=render,
                                        record=record,
                                        slow_t=slow_t)
         print('Final hand to cube dist: ', reached)
         print('Final step distance: ', dist)
+        print('Final reward: ', r)
 
     def train(self):
         self.net_mode(train=True)
@@ -230,20 +233,21 @@ class DDPG:
                     self.save_interval and\
                     epoch % self.save_interval == 0 and \
                     logger.get_dir():
-                mean_final_dist_reached, mean_final_dist, succ_rate = self.rollout()
+                mean_final_dist_reached, mean_final_dist, final_r, succ_rate = self.rollout()
                 logger.logkv('epoch', epoch)
                 logger.logkv('test/total_rollout_steps', total_rollout_steps)
                 logger.logkv('test/mean_final_dist', mean_final_dist)
                 logger.logkv('test/succ_rate', succ_rate)
 
-                tra_mean_dist_reached, tra_mean_dist, tra_succ_rate = self.rollout(train_test=True)
+                tra_mean_dist_reached, tra_mean_dist, tra_final_r, tra_succ_rate = self.rollout(train_test=True)
                 logger.logkv('train/mean_final_dist_reached', tra_mean_dist_reached)
                 logger.logkv('train/mean_final_dist', tra_mean_dist)
                 logger.logkv('train/succ_rate', tra_succ_rate)
 
                 # self.log_model_weights()
                 logger.dumpkvs()
-
+                
+                '''
                 if mean_final_dist_reached > 0.075:
                     if mean_final_dist_reached < self.closest_dist_reached:
                         self.closest_dist_reached = mean_final_dist_reached
@@ -258,7 +262,12 @@ class DDPG:
                         print(self.closest_dist)
                     else:
                         is_best = False
-                
+                '''
+                if final_r > self.best_reward:
+                    is_best =True
+                    print('saving model with best reward')
+                else:
+                    is_best = False
                 self.save_model(is_best=is_best, step=self.global_step)
 
     def train_net(self):
@@ -383,7 +392,6 @@ class DDPG:
         mutils.print_yellow('Saving checkpoint: %s' % ckpt_file)
         torch.save(data_to_save, ckpt_file)
         if is_best:
-            print('saving best model, step: ', step)
             torch.save(data_to_save, os.path.join(self.model_dir,
                                                   'model_best.pth'))
 
@@ -394,26 +402,31 @@ class DDPG:
         final_dist_reached = []
         final_dist = []
         episode_length = []
+        reward_list = []
         for idx in range(test_conditions):
             if train_test:
                 obs = self.env.train_test_reset(cond=idx)
             else:
                 obs = self.env.test_reset(cond=idx)
+            total_r = 0
             for t_rollout in range(self.rollout_steps):
                 obs = obs[0].copy()
                 act = self.policy(obs, stochastic=False).flatten()
                 obs, r, done, info = self.env.step(act)
+                total_r += r
                # if render:
                    # self.env.render()
                     #if slow_t > 0:
                       #  time.sleep(slow_t)
                 if done:
                     done_num += 1
+                    total_r += 5
                     break
             if record:
                 print('dist: ', info['dist'])
             final_dist_reached.append(info['dist'][0])
             final_dist.append(info['dist'][1])
+            reward_list.append(total_r)
             print(final_dist_reached)
             print(final_dist)
             episode_length.append(t_rollout)
@@ -421,6 +434,7 @@ class DDPG:
         final_dist = np.array(final_dist)
         mean_final_dist_reached = np.mean(final_dist_reached)
         mean_final_dist = np.mean(final_dist)
+        final_r = np.mean(reward_list)
 
         succ_rate = done_num / float(test_conditions)
         if record:
@@ -439,7 +453,7 @@ class DDPG:
                   "".format(np.percentile(final_dist, 75)))
             print('Success rate:', succ_rate)
 
-        return mean_final_dist_reached, mean_final_dist, succ_rate
+        return mean_final_dist_reached, mean_final_dist, final_r, succ_rate
 
     def log_model_weights(self):
         for name, param in self.actor.named_parameters():
