@@ -2,7 +2,6 @@ import json
 import os
 import time
 from collections import deque
-from typing import final
 
 import numpy as np
 import torch
