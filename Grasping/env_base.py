@@ -158,7 +158,7 @@ class BaseEnv:
             reward_dist = 1
         elif reached < 0.075:
             done = False
-            reward_dist = -dist
+            reward_dist = 1-dist
         #elif reached > 0.25:
             #done = False
             #reward_dist = -10
@@ -181,7 +181,7 @@ class BaseEnv:
 
         
         ref_point = np.array(p.getBasePositionAndOrientation(self.cube)[0])
-        ob = np.concatenate([gripper_qpos, endfactor_pos, ref_point, height_target])
+        ob = np.concatenate([gripper_qpos, endfactor_pos, endfactor_pos, height_target])
         ref_point = np.concatenate([endfactor_pos,ref_point])
         return ob, ref_point
 
