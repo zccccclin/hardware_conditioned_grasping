@@ -43,14 +43,14 @@ class GripperEnv(BaseEnv):
             hand_pose[0] += scaled_action[0]
         if -.15 <= hand_pose[1] + scaled_action[1] <= .15:
             hand_pose[1] += scaled_action[1]
-        if .1 <= hand_pose[2] + scaled_action[2] <= .3:
+        if .05 <= hand_pose[2] + scaled_action[2] <= .3:
             hand_pose[2] += scaled_action[2]
         desired_joint_positions = p.calculateInverseKinematics(
                                             self.sim, self.end_factor,
                                             hand_pose,[1,1,0,0],
                                             lowerLimits=self.ll, upperLimits=self.ul, residualThreshold=1e-5 )[:6]
         gripper_pos = p.getJointState(self.sim,6)[0]
-        gripper_act = np.array([gripper_pos + action[3]])*3.1415 * np.ones(len(self.act_joint_indices[6:]))
+        gripper_act = np.array([gripper_pos + action[3]])*5 * np.ones(len(self.act_joint_indices[6:]))
         desired_joint_positions = np.concatenate([desired_joint_positions, gripper_act])
         p.setJointMotorControlArray(
             bodyIndex=self.sim,
