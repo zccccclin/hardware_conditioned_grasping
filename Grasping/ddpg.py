@@ -169,7 +169,7 @@ class DDPG:
                     self.obs_oms.update(new_obs)
                 obs = new_obs
             epoch_episode_rewards.append(episode_reward)
-            print(episode_reward)
+            print(episode_reward, epoch)
             print(epoch_episode_rewards)
             epoch_episode_steps.append(episode_step)
             if self.use_her:

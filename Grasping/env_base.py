@@ -153,7 +153,7 @@ class BaseEnv:
         reached = np.linalg.norm(s[:3] - goal[:3])
         dist = np.linalg.norm(s[3:] - goal[3:])
         
-        if dist < self.dist_tol and reached < 0.065:
+        if dist < self.dist_tol:
             done = True
             reward_dist = 1
         elif reached < 0.075:
@@ -181,7 +181,7 @@ class BaseEnv:
 
         
         ref_point = np.array(p.getBasePositionAndOrientation(self.cube)[0])
-        ob = np.concatenate([gripper_qpos, endfactor_pos, endfactor_pos, height_target])
+        ob = np.concatenate([gripper_qpos, endfactor_pos, ref_point, endfactor_pos, height_target])
         ref_point = np.concatenate([endfactor_pos,ref_point])
         return ob, ref_point
 
