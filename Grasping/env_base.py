@@ -152,16 +152,32 @@ class BaseEnv:
     def cal_reward(self, s, goal, a ):
         reached = np.linalg.norm(s[:3] - goal[:3])
         dist = np.linalg.norm(s[3:] - goal[3:])
+
+        contact_pts = len(p.getContactPoints(self.sim, self.cube))
+        link_set = set({})
+        if  contact_pts!= 0 :
+            for i in range(contact_pts):
+                link_set.add(p.getContactPoints(self.sim, self.cube)[i][3])
+
         
         if dist < self.dist_tol:
             done = True
             reward_dist = 1
-        elif reached < 0.075:
+        elif contact_pts!=0:
             done = False
-            reward_dist = 1-dist
+            if (11 in link_set) and (16 in link_set) and (21 in link_set):
+                reward_dist = 1-dist
+            elif (11 in link_set) or (16 in link_set) or (21 in link_set):
+                reward_dist = .5-dist
+            else:
+                reward_dist = .25-dist
+        #elif reached < 0.075:
+            #done = False
+            #reward_dist = 1-dist
         #elif reached > 0.25:
             #done = False
             #reward_dist = -10
+
         else:
             done = False
             reward_dist = -reached + -dist
@@ -169,6 +185,10 @@ class BaseEnv:
         final_dist = [reached,dist]
         #print(reward)
         #reward -= 0.1 * np.square(a).sum()
+
+        
+
+        
         return reward, final_dist, done
 
     def get_obs(self):
