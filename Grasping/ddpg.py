@@ -43,7 +43,7 @@ class DDPG:
         self.best_reward = -np.inf
         self.warmup_iter = args.warmup_iter
         self.max_grad_norm = args.max_grad_norm
-        self.use_her = args.her
+        self.use_her = False #args.her
         self.k_future = args.k_future
         self.model_dir = os.path.join(args.save_dir, 'model')
         self.pretrain_dir = args.pretrain_dir
@@ -122,8 +122,7 @@ class DDPG:
         reached, dist, r, succ_rate = self.rollout(render=render,
                                        record=record,
                                        slow_t=slow_t)
-        print('Final hand to cube dist: ', reached)
-        print('Final step distance: ', dist)
+        print('Final cube to goal distance: ', dist)
         print('Final reward: ', r)
 
     def train(self):
@@ -264,6 +263,7 @@ class DDPG:
                 '''
                 if final_r > self.best_reward:
                     is_best =True
+                    self.best_reward = final_r
                     print('saving model with best reward')
                 else:
                     is_best = False
@@ -469,7 +469,7 @@ class DDPG:
                          param.clone().cpu().data.numpy())
 
     def random_action(self):
-        act = np.random.uniform(-1., 1., self.ac_dim)
+        act = np.random.uniform(-1, 1, self.ac_dim)
         return act
 
     def policy(self, obs, stochastic=True):

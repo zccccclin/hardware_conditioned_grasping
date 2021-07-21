@@ -98,7 +98,7 @@ def main():
                         help='ou noise std')
     parser.add_argument('--uniform_noise_high', type=float, default=0.5,
                         help='uniform noise high limit')
-    parser.add_argument('--uniform_noise_low', type=float, default=0.,
+    parser.add_argument('--uniform_noise_low', type=float, default=-0.,
                         help='uniform noise low limit')
     parser.add_argument('--max_noise_dec_step', type=float, default=0.000,
                         help='decreasing step of maximum noise level')

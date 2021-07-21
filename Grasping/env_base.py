@@ -108,7 +108,7 @@ class BaseEnv:
     '''
     
     def update_action_space(self):
-        self.ctrl_high = np.ones(4) 
+        self.ctrl_high = np.ones(4) * .05
         self.ctrl_low = -self.ctrl_high
         self.action_space = spaces.Box(self.ctrl_low, self.ctrl_high, dtype=np.float32)
 
@@ -117,8 +117,8 @@ class BaseEnv:
         act_k = (self.action_space.high - self.action_space.low)/2.
         act_b = (self.action_space.high + self.action_space.low)/2.
         #print(act_k * action + act_b)
-        #return act_k * action + act_b
-        return [.05 if b>0 else -.05 for b in action]
+        return act_k * action + act_b
+        #return [.01 if b>0 else -.01 for b in action]
 
     def reset_robot(self, robot_id):
         
@@ -137,7 +137,7 @@ class BaseEnv:
         self.plane = p.loadURDF("plane.urdf")
         #self.tray = p.loadURDF('tray/tray.urdf', [.7, 0, 0],[0,0,1,1],useFixedBase=True,)
 
-        self.cube = p.loadURDF('cube_small.urdf', cube_pose,) #globalScaling=2)
+        self.cube = p.loadURDF('cube_small.urdf', cube_pose, globalScaling=1.3)
 
         self.update_action_space()
 
@@ -162,12 +162,15 @@ class BaseEnv:
         
         if dist < self.dist_tol:
             done = True
-            reward_dist = 1
+            reward_dist = 10
+        elif dist < .1:
+            done = False
+            reward_dist = 5-dist
         elif contact_pts!=0:
             done = False
-            if (11 in link_set) and (16 in link_set) and (21 in link_set):
+            if 7 in link_set: #(11 in link_set) and (16 in link_set) and (21 in link_set):
                 reward_dist = 1-dist
-            elif (11 in link_set) or (16 in link_set) or (21 in link_set):
+            elif (9 in link_set) or (14 in link_set) or (19 in link_set):
                 reward_dist = .5-dist
             else:
                 reward_dist = .25-dist
@@ -177,15 +180,17 @@ class BaseEnv:
         #elif reached > 0.25:
             #done = False
             #reward_dist = -10
-
+        elif np.linalg.norm(s[:2] - goal[:2]) < .02:
+            done = False
+            reward_dist = -(s[3]-goal[3])-dist
         else:
             done = False
-            reward_dist = -reached + -dist
+            reward_dist = -reached -dist
         reward = reward_dist
         final_dist = [reached,dist]
         #print(reward)
         #reward -= 0.1 * np.square(a).sum()
-
+        #print(a)
         
 
         
