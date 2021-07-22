@@ -80,17 +80,17 @@ def main():
                         help='second hidden layer size')
     parser.add_argument('--hid3_dim', type=int, default=256,
                         help='third hidden layer size')
-    parser.add_argument('--actor_lr', type=float, default=1e-4,
+    parser.add_argument('--actor_lr', type=float, default=0.0001,
                         help='actor learning rate')
-    parser.add_argument('--critic_lr', type=float, default=1e-4,
+    parser.add_argument('--critic_lr', type=float, default=0.001,
                         help='critic learning rate')
     parser.add_argument('--critic_weight_decay', type=float,
                         default=0.001, help='critic weight_decay')
-    parser.add_argument('--her', type=bool, default=True,
+    parser.add_argument('--her', type=bool, default=False,
                         help='whether to use hindsight experience replay')
     parser.add_argument('--k_future', type=int, default=4,
                         help='hindsight experience replay k future goals')
-    parser.add_argument('--tau', type=float, default=0.01,
+    parser.add_argument('--tau', type=float, default=0.001,
                         help='tau for target network update')
     parser.add_argument('--reward_scale', type=float, default=1,
                         help='scaling reward')
@@ -102,13 +102,13 @@ def main():
                         help='uniform noise low limit')
     parser.add_argument('--max_noise_dec_step', type=float, default=0.000,
                         help='decreasing step of maximum noise level')
-    parser.add_argument('--tol', type=float, default=0.02,
+    parser.add_argument('--tol', type=float, default=0.04,
                         help='tolerance for distance to target')
     parser.add_argument('--random_prob', type=float, default=0.1,
                         help='probability of taking completely random action')
     parser.add_argument('--normal_noise_std', type=float, default=0.1,
                         help='std for normal noise')
-    parser.add_argument('--noise_type', default='gaussian',
+    parser.add_argument('--noise_type', default='uniform',
                         choices=['uniform', 'ou_noise', 'gaussian'], type=str,
                         help='noise type for exploration')
     parser.add_argument('--memory_limit', type=int, default=1e6,
