@@ -17,14 +17,18 @@ The Grasping task:
 The DRL alogrithm used in reaching task is DDPG, HER is turned off since the reward function is dense. Detail of the reward function can be found in the env_base.py file under cal_reward.
 1. To train the model, run:
 python main.py
+
 Use Ctrl + C to interrupt training, 
+
 2. To resume:
 python main.py --resume
+
 To see training in GUI:
 python main.py --render
 hyperparameters can be changed by input relevant arguments, more details can be found in the main.py file.
 
 3. To test the trained model, run:
 python main.py --test --render
+
 The final dist to goal will be printed out.
 
