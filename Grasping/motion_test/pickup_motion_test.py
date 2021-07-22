@@ -52,7 +52,7 @@ def main(robot):
 
     #for i in range(p.getNumJoints(robot_id)):
         #print(p.getJointInfo(robot_id, i))
-
+    
     while simulate:
         time.sleep(0.01)
         move_factor = 0.05
@@ -96,7 +96,7 @@ def main(robot):
             desired_joint_positions = p.calculateInverseKinematics(robot_id,7,hand_pose,[1,1,0,0],lowerLimits=ll, upperLimits=ul, residualThreshold=1e-5 )[:6]
             gripper_act = np.ones(len(gripper_act))*.6
             desired_joint_positions = np.concatenate([desired_joint_positions,gripper_act])
-
+        
         p.setJointMotorControlArray(
             bodyIndex=robot_id,
             jointIndices=act_joint_indices,
@@ -107,8 +107,8 @@ def main(robot):
         end_factor_pos = np.array(list(p.getLinkState(robot_id,6)[4]))
         goal = np.array(list(p.getBasePositionAndOrientation(cube)[0]))
         dist = np.linalg.norm(end_factor_pos - goal)
-        print(dist)
-
+        #print(dist)
+        
         #print(desired_joint_positions, joint_positions)
         p.stepSimulation()
 
