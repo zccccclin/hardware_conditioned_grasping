@@ -163,9 +163,12 @@ class BaseEnv:
             reward_dist = 5-dist
         elif contact_pts!=0:
             done = False
-            if 7 in link_set: #(11 in link_set) and (16 in link_set) and (21 in link_set):
+            #if 7 in link_set: #(11 in link_set) and (16 in link_set) and (21 in link_set):
+                #reward_dist = 1-dist
+            if (9 in link_set) or (14 in link_set) or (19 in link_set):
                 reward_dist = 1-dist
-            elif (9 in link_set) or (14 in link_set) or (19 in link_set):
+            #elif (9 in link_set) or (14 in link_set) or (19 in link_set):
+            elif (11) in link_set) or (16 in link_set) or (21 in link_set):
                 reward_dist = .5-dist
             else:
                 reward_dist = .25-dist
