@@ -168,7 +168,7 @@ class BaseEnv:
             if (9 in link_set) or (14 in link_set) or (19 in link_set):
                 reward_dist = 1-dist
             #elif (9 in link_set) or (14 in link_set) or (19 in link_set):
-            elif (11) in link_set) or (16 in link_set) or (21 in link_set):
+            elif (11 in link_set) or (16 in link_set) or (21 in link_set):
                 reward_dist = .5-dist
             else:
                 reward_dist = .25-dist
