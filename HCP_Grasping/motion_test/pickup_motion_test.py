@@ -124,11 +124,11 @@ def main(robot):
         print(np.linalg.norm(hand_pose[:2]-goal[:2]))
         contact_pt = len(p.getContactPoints(robot_id, cube))
         set1 = set({})
-        if  contact_pt != 0 :
-            for i in range(contact_pt):
-                print(f'contact {i}: ', p.getContactPoints(robot_id, cube)[i])
+        #if  contact_pt != 0 :
+            #for i in range(contact_pt):
+                #print(f'contact {i}: ', p.getContactPoints(robot_id, cube)[i])
         #print(p.getContactPoints(robot_id, plane))
-        #print(desired_joint_positions, joint_positions)
+        print(desired_joint_positions)
         p.stepSimulation()
 
 if __name__ == "__main__":

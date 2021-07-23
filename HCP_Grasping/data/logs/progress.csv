@@ -1,2 +1,2 @@
-total_rollout_steps,rollout/ep_steps,time_elapsed,critic_lr,rollout/return,actor_lr,epoch
-200,200.0,5.201113700866699,0.001,-58.35605348484284,0.0001,
+rollout/ep_steps,rollout/return,actor_lr,epoch,time_elapsed,critic_lr,total_rollout_steps
+200.0,-59.787079256366184,0.0001,,5.397607803344727,0.001,200

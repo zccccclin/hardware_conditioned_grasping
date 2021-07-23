@@ -82,7 +82,7 @@ class BaseEnv:
         raise NotImplementedError
     
     def reset_robot_pose(self, robot_id, act_joint_indices):
-        desired_joint_positions = [-0.184, -1.09, 1.497, -1.98, -1.5715, 1.38]
+        desired_joint_positions = [-0.197, -1.17, 1.661, -2.06, -1.5715, 1.37]
         p.setJointMotorControlArray(
             bodyIndex=robot_id,
             jointIndices=act_joint_indices[:6],
@@ -115,7 +115,7 @@ class BaseEnv:
         p.resetSimulation()
         p.setGravity(0,0,-9.81)
         robot_pose = [0,0,0]
-        cube_pose = [.65, 0, 0.03]
+        cube_pose = [.65, 0, 0.0]
         self.act_joint_indices = [0,1,2,3,4,5,9,11,14,16,19,21]
         
         self.sim = p.loadURDF(robot_file, basePosition=robot_pose,
@@ -206,9 +206,10 @@ class BaseEnv:
         joint_states = p.getJointStates(self.sim, self.act_joint_indices[6:])
         gripper_qpos = np.array([j[0] for j in joint_states])
         height_target = np.array([.65, 0,.2])
-        
+        if self.with_kin:
+            ob = self.link_prop
         ref_point = np.array(p.getBasePositionAndOrientation(self.cube)[0])
-        ob = np.concatenate([self.link_prop, gripper_qpos, endfactor_pos, ref_point, endfactor_pos, height_target])
+        ob = np.concatenate([ob, gripper_qpos, endfactor_pos, ref_point, endfactor_pos, height_target])
         ref_point = np.concatenate([endfactor_pos,ref_point])
         return ob, ref_point
 
