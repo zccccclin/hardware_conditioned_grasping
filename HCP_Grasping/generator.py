@@ -57,7 +57,7 @@ def geo_change(robot, idx, r, l):
     #print(robot.links[idx].name)
 
 def get_variable_params():
-    vars_dict = {'length_range': [0.03,0.1],
+    vars_dict = {'length_range': [0.03,0.075],
                  'radius_range': [0.005 ,0.015]}
     return vars_dict
 
