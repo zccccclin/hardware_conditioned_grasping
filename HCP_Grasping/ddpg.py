@@ -169,7 +169,6 @@ class DDPG:
                 obs = new_obs
             epoch_episode_rewards.append(episode_reward)
             print(episode_reward, epoch)
-            print(epoch_episode_rewards)
             epoch_episode_steps.append(episode_step)
             if self.use_her:
                 for t in range(episode_step - self.k_future):
@@ -426,8 +425,6 @@ class DDPG:
             final_dist_reached.append(info['dist'][0])
             final_dist.append(info['dist'][1])
             reward_list.append(total_r)
-            print(final_dist_reached)
-            print(final_dist)
             episode_length.append(t_rollout)
         final_dist_reached = np.array(final_dist_reached)
         final_dist = np.array(final_dist)

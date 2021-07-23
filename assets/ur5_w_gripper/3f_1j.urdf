@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!--FOR GRIPPER, THERE IS NO LINK INERTIA DEFINED HERE-->
-<robot name="ur5_2f1j">
+<robot name="ur5_3f1j">
 
 
   <link name="base_link">

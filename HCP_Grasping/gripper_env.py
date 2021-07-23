@@ -24,7 +24,7 @@ class GripperEnv(BaseEnv):
 
     
 
-    def reset(self, robot_id=0): #change 0 to None for multi
+    def reset(self, robot_id=None): 
         if robot_id is None:
             self.robot_id = np.random.randint(0, self.train_robot_num, 1)[0]
         else:
@@ -43,7 +43,7 @@ class GripperEnv(BaseEnv):
             hand_pose[0] += scaled_action[0]
         if -.15 <= hand_pose[1] + scaled_action[1] <= .15:
             hand_pose[1] += scaled_action[1]
-        if .1 <= hand_pose[2] + scaled_action[2] <= .3:
+        if (.1 - self.finger_height_offset) <= hand_pose[2] + scaled_action[2] <= (.3 - self.finger_height_offset):
             hand_pose[2] += scaled_action[2]
         #print(hand_pose)
         desired_joint_positions = p.calculateInverseKinematics(
@@ -66,7 +66,7 @@ class GripperEnv(BaseEnv):
             time.sleep(0.05)
 
         ob = self.get_obs()
-        re_target = np.array([.65,0,.25])
+        re_target = np.array([.65,0,.2])
         #re_target = np.concatenate([ob[1][3:], re_target])
         re_target = np.concatenate([np.array([.65, 0, 0.03]), re_target])
         reward, dist, done = self.cal_reward(ob[1],

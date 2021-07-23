@@ -8,6 +8,7 @@ import time
 
 import numpy as np
 from tqdm import tqdm
+from urdfpy.urdf import Link
 
 
 def robot_param_random_sample(robot, pre_gen_params, vars_to_change):
@@ -36,11 +37,13 @@ def robot_param_random_sample(robot, pre_gen_params, vars_to_change):
         #2nd layer:
         length_id = np.random.randint(0, len(pre_gen_params['length']),1)[0]
         length = pre_gen_params['length'][length_id]
-        for idx in link_idx[1::2]:
+        half = int(len(joint_idx)/2)
+        for f_idx, j_idx in zip(link_idx[1::2],joint_idx[half:]):
             if vars_to_change['layer_rad']:
                 radius_id =np.random.randint(0, len(pre_gen_params['radius']),1)[0]
                 radius = pre_gen_params['radius'][radius_id]
-            geo_change(robot, idx, radius, length)
+            geo_change(robot, f_idx, radius, length)
+            robot.joints[j_idx].origin[2][3] = length
 
             
         
@@ -54,8 +57,8 @@ def geo_change(robot, idx, r, l):
     #print(robot.links[idx].name)
 
 def get_variable_params():
-    vars_dict = {'length_range': [0.03,0.2],
-                 'radius_range': [0.005,0.03]}
+    vars_dict = {'length_range': [0.03,0.1],
+                 'radius_range': [0.005 ,0.015]}
     return vars_dict
 
 def pre_gen_robot_params(vars_to_change, param_var_num):

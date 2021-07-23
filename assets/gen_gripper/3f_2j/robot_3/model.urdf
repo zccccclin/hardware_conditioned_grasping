@@ -181,14 +181,14 @@
     </inertial>
     <visual>
       <geometry>
-        <cylinder radius="0.0276953963125881" length="0.06597677972001004"/>
+        <cylinder radius="0.014078158525035238" length="0.044813968120004134"/>
       </geometry>
       <material name="green"/>
-      <origin xyz="0.0 0.0 0.03298838986000502" rpy="0.0 -0.0 0.0"/>
+      <origin xyz="0.0 0.0 0.022406984060002067" rpy="0.0 -0.0 0.0"/>
     </visual>
     <collision>
       <geometry>
-        <cylinder radius="0.0276953963125881" length="0.06597677972001004"/>
+        <cylinder radius="0.014078158525035238" length="0.044813968120004134"/>
       </geometry>
       <origin xyz="0.0 0.0 0.025" rpy="0.0 0.0 0.0"/>
     </collision>
@@ -201,14 +201,14 @@
     </inertial>
     <visual>
       <geometry>
-        <cylinder radius="0.0276953963125881" length="0.0332923828379505"/>
+        <cylinder radius="0.014078158525035238" length="0.031355687050920796"/>
       </geometry>
       <material name="green"/>
-      <origin xyz="0.0 0.0 0.01664619141897525" rpy="0.0 -0.0 0.0"/>
+      <origin xyz="0.0 0.0 0.015677843525460398" rpy="0.0 -0.0 0.0"/>
     </visual>
     <collision>
       <geometry>
-        <cylinder radius="0.0276953963125881" length="0.0332923828379505"/>
+        <cylinder radius="0.014078158525035238" length="0.031355687050920796"/>
       </geometry>
       <origin xyz="0.0 0.0 0.025" rpy="0.0 0.0 0.0"/>
     </collision>
@@ -221,14 +221,14 @@
     </inertial>
     <visual>
       <geometry>
-        <cylinder radius="0.0276953963125881" length="0.06597677972001004"/>
+        <cylinder radius="0.014078158525035238" length="0.044813968120004134"/>
       </geometry>
       <material name="green"/>
-      <origin xyz="0.0 0.0 0.03298838986000502" rpy="0.0 -0.0 0.0"/>
+      <origin xyz="0.0 0.0 0.022406984060002067" rpy="0.0 -0.0 0.0"/>
     </visual>
     <collision>
       <geometry>
-        <cylinder radius="0.0276953963125881" length="0.06597677972001004"/>
+        <cylinder radius="0.014078158525035238" length="0.044813968120004134"/>
       </geometry>
       <origin xyz="0.0 0.0 0.025" rpy="0.0 0.0 0.0"/>
     </collision>
@@ -241,14 +241,14 @@
     </inertial>
     <visual>
       <geometry>
-        <cylinder radius="0.0276953963125881" length="0.0332923828379505"/>
+        <cylinder radius="0.014078158525035238" length="0.031355687050920796"/>
       </geometry>
       <material name="green"/>
-      <origin xyz="0.0 0.0 0.01664619141897525" rpy="0.0 -0.0 0.0"/>
+      <origin xyz="0.0 0.0 0.015677843525460398" rpy="0.0 -0.0 0.0"/>
     </visual>
     <collision>
       <geometry>
-        <cylinder radius="0.0276953963125881" length="0.0332923828379505"/>
+        <cylinder radius="0.014078158525035238" length="0.031355687050920796"/>
       </geometry>
       <origin xyz="0.0 0.0 0.025" rpy="0.0 0.0 0.0"/>
     </collision>
@@ -261,14 +261,14 @@
     </inertial>
     <visual>
       <geometry>
-        <cylinder radius="0.0276953963125881" length="0.06597677972001004"/>
+        <cylinder radius="0.014078158525035238" length="0.044813968120004134"/>
       </geometry>
       <material name="green"/>
-      <origin xyz="0.0 0.0 0.03298838986000502" rpy="0.0 -0.0 0.0"/>
+      <origin xyz="0.0 0.0 0.022406984060002067" rpy="0.0 -0.0 0.0"/>
     </visual>
     <collision>
       <geometry>
-        <cylinder radius="0.0276953963125881" length="0.06597677972001004"/>
+        <cylinder radius="0.014078158525035238" length="0.044813968120004134"/>
       </geometry>
       <origin xyz="0.0 0.0 0.025" rpy="0.0 0.0 0.0"/>
     </collision>
@@ -281,14 +281,14 @@
     </inertial>
     <visual>
       <geometry>
-        <cylinder radius="0.0276953963125881" length="0.0332923828379505"/>
+        <cylinder radius="0.014078158525035238" length="0.031355687050920796"/>
       </geometry>
       <material name="green"/>
-      <origin xyz="0.0 0.0 0.01664619141897525" rpy="0.0 -0.0 0.0"/>
+      <origin xyz="0.0 0.0 0.015677843525460398" rpy="0.0 -0.0 0.0"/>
     </visual>
     <collision>
       <geometry>
-        <cylinder radius="0.0276953963125881" length="0.0332923828379505"/>
+        <cylinder radius="0.014078158525035238" length="0.031355687050920796"/>
       </geometry>
       <origin xyz="0.0 0.0 0.025" rpy="0.0 0.0 0.0"/>
     </collision>
@@ -531,7 +531,7 @@
     <parent link="f11"/>
     <child link="f12_slot"/>
     <axis xyz="1. 0. 0."/>
-    <origin xyz="0.0 0.0 0.06597677972001004" rpy="0.0 0.0 0.0"/>
+    <origin xyz="0.0 0.0 0.044813968120004134" rpy="0.0 0.0 0.0"/>
   </joint>
   <joint name="f21_base_joint" type="fixed">
     <parent link="palm"/>
@@ -543,7 +543,7 @@
     <parent link="f21"/>
     <child link="f22_slot"/>
     <axis xyz="1. 0. 0."/>
-    <origin xyz="0.0 0.0 0.06597677972001004" rpy="0.0 0.0 0.0"/>
+    <origin xyz="0.0 0.0 0.044813968120004134" rpy="0.0 0.0 0.0"/>
   </joint>
   <joint name="f31_base_joint" type="fixed">
     <parent link="palm"/>
@@ -555,25 +555,25 @@
     <parent link="f31"/>
     <child link="f32_slot"/>
     <axis xyz="1. 0. 0."/>
-    <origin xyz="0.0 0.0 0.06597677972001004" rpy="0.0 0.0 0.0"/>
+    <origin xyz="0.0 0.0 0.044813968120004134" rpy="0.0 0.0 0.0"/>
   </joint>
   <joint name="f13_slot_joint" type="fixed">
     <parent link="f12"/>
     <child link="f13_slot"/>
     <axis xyz="1. 0. 0."/>
-    <origin xyz="0.0 0.0 0.05" rpy="0.0 0.0 0.0"/>
+    <origin xyz="0.0 0.0 0.031355687050920796" rpy="0.0 0.0 0.0"/>
   </joint>
   <joint name="f23_slot_joint" type="fixed">
     <parent link="f22"/>
     <child link="f23_slot"/>
     <axis xyz="1. 0. 0."/>
-    <origin xyz="0.0 0.0 0.05" rpy="0.0 0.0 0.0"/>
+    <origin xyz="0.0 0.0 0.031355687050920796" rpy="0.0 0.0 0.0"/>
   </joint>
   <joint name="f33_slot_joint" type="fixed">
     <parent link="f32"/>
     <child link="f33_slot"/>
     <axis xyz="1. 0. 0."/>
-    <origin xyz="0.0 0.0 0.05" rpy="0.0 0.0 0.0"/>
+    <origin xyz="0.0 0.0 0.031355687050920796" rpy="0.0 0.0 0.0"/>
   </joint>
   <material name="LightGrey">
     <color rgba="0.7 0.7 0.7 1. "/>

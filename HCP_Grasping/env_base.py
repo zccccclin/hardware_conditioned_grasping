@@ -7,6 +7,7 @@ import gym
 from gym import spaces
 from numpy.random import f
 import pybullet as p
+from urdfpy import URDF
 from pybullet_utils import bullet_client
 from util import rotations
 import pybullet_data
@@ -35,7 +36,7 @@ class BaseEnv:
         self.ll = [-3.14, -3.14, -3.14, -3.14, -3.14, -3.14]
         self.ul = [3.14, 3.14, 3.14, 3.14, 3.14, 3.14]
         self.end_factor = 7
-
+        self.finger_height_offset = 0
         self.robots = []
         for folder in robot_folders:
             self.robots.append(os.path.join(robot_dir, folder))
@@ -44,11 +45,11 @@ class BaseEnv:
         self.robot_num = len(self.robots)
         
         if train:
-            self.test_robot_num = 1 #min(10, self.robot_num)
+            self.test_robot_num = min(10, self.robot_num)
             self.train_robot_num = self.robot_num - self.test_robot_num
             self.test_robot_ids = list(range(self.train_robot_num,
                                              self.robot_num))
-            self.train_test_robot_num = 1 #min(10, self.train_robot_num)
+            self.train_test_robot_num = min(10, self.train_robot_num)
             self.train_test_robot_ids = list(range(self.train_test_robot_num))
             self.train_test_conditions = self.train_test_robot_num
             self.testing = False
@@ -92,20 +93,7 @@ class BaseEnv:
         for i in range(20):
             p.stepSimulation()
         return desired_joint_positions
-    '''
-    def update_link_data(self):
-        self.robot_name = p.getBodyInfo(self.sim)[1].decode('UTF-8')
-        self.link_name_dict = OrderedDict()
-        for id in range(p.getNumJoints(self.sim)):
-            name = p.getJointInfo(self.sim, id)[12].decode('UTF-8')
-            if len(name) < 4:
-                self.link_name_dict[name] = id
-        f11_v_idx = self.link_name_dict['f11'] + 1
-        self.fingers_total_height = p.getVisualShapeData(self.sim)[f11_v_idx][3][1]
-        if '2j' in self.robot_name:
-            f12_v_idx = self.link_name_dict['f12'] + 1
-            self.fingers_total_height += p.getVisualShapeData(self.sim)[f12_v_idx][3][1]
-    '''
+
     
     def update_action_space(self):
         self.ctrl_high = np.ones(4) * .05
@@ -122,9 +110,8 @@ class BaseEnv:
 
     def reset_robot(self, robot_id):
         
-        #self.robot_folder_id = self.dir2id[self.robots[robot_id]]
-        #robot_file = os.path.join(self.robots[robot_id], 'model.urdf')
-        robot_file = '../assets/3f_2j.urdf'
+        self.robot_folder_id = self.dir2id[self.robots[robot_id]]
+        robot_file = os.path.join(self.robots[robot_id], 'model.urdf')
         p.resetSimulation()
         p.setGravity(0,0,-9.81)
         robot_pose = [0,0,0]
@@ -133,6 +120,11 @@ class BaseEnv:
 
         self.sim = p.loadURDF(robot_file, basePosition=robot_pose,
                               useFixedBase=1, physicsClientId=self.pc._client)
+        self.sim_urdf = URDF.load(robot_file)
+        #pasd = []
+        #for i in range(p.getNumJoints(self.sim)):
+            #pasd.append((p.getJointInfo(self.sim,i)[0],p.getJointInfo(self.sim,i)[1]))
+        #print(pasd)
         self.reset_robot_pose(self.sim, self.act_joint_indices)
         self.plane = p.loadURDF("plane.urdf")
         #self.tray = p.loadURDF('tray/tray.urdf', [.7, 0, 0],[0,0,1,1],useFixedBase=True,)
@@ -152,7 +144,7 @@ class BaseEnv:
     def cal_reward(self, s, goal, a ):
         reached = np.linalg.norm(s[:3] - goal[:3])
         dist = np.linalg.norm(s[3:] - goal[3:])
-
+        flooring = len(p.getContactPoints(self.sim, self.plane))
         contact_pts = len(p.getContactPoints(self.sim, self.cube))
         link_set = set({})
         if  contact_pts!= 0 :
@@ -163,6 +155,9 @@ class BaseEnv:
         if dist < self.dist_tol:
             done = True
             reward_dist = 10
+        elif flooring != 0:
+            done = False
+            reward_dist = -10
         elif dist < .1:
             done = False
             reward_dist = 5-dist
@@ -197,73 +192,36 @@ class BaseEnv:
         return reward, final_dist, done
 
     def get_obs(self):
+        if self.with_kin:
+            links_l, links_r = self.get_link_properties()
+            ob = np.concatenate([links_l, links_r])
+            self.finger_height_offset = .1 - links_l[0] - links_l[1]
         endfactor_pos  = np.array((p.getLinkState(self.sim, self.end_factor)[4]))
         joint_states = p.getJointStates(self.sim, self.act_joint_indices[6:])
         gripper_qpos = np.array([j[0] for j in joint_states])
-
-        height_target = np.array([.65, 0,.25])
-        
-
+        height_target = np.array([.65, 0,.2])
         
         ref_point = np.array(p.getBasePositionAndOrientation(self.cube)[0])
-        ob = np.concatenate([gripper_qpos, endfactor_pos, ref_point, endfactor_pos, height_target])
+        ob = np.concatenate([ob, gripper_qpos, endfactor_pos, ref_point, endfactor_pos, height_target])
         ref_point = np.concatenate([endfactor_pos,ref_point])
         return ob, ref_point
 
-    def get_qpos_qvel(self, sim):
-        joint_states = p.getJointStates(sim, self.joint_indices_list)
-        qpos = np.array([j[0] for j in joint_states])
-        angle_noise_range = 0.02
-        qpos += np.random.uniform(-angle_noise_range,
-                                  angle_noise_range,
-                                  6)
-        qvel = np.array([j[1] for j in joint_states])
-        velocity_noise_range = 0.02
-        qvel += np.random.uniform(-velocity_noise_range,
-                                  velocity_noise_range,
-                                  6)
-        return qpos, qvel
+    def get_link_properties(self):
+            links_r = [link.visuals[0].geometry.cylinder.radius for link in self.sim_urdf.links if len(link.name)==3]
+            links_l = [link.visuals[0].geometry.cylinder.length for link in self.sim_urdf.links if len(link.name)==3]
+            if '2f_1j' in self.sim_urdf.name:
+                links_r = [links_r[0],.0,links_r[1],.0,.0,.0]
+                links_l = [links_l[0],.0,links_l[1],.0,.0,.0]
+            elif '2f_2j' in self.sim_urdf.name:
+                links_r = links_r + [.0,.0]
+                links_l = links_l + [.0,.0]
+            elif '3f_1j' in self.sim_urdf.name:
+                links_r = [links_r[0],.0,links_r[1],.0,links_r[2],.0]
+                links_l = [links_l[0],.0,links_l[1],.0,links_l[2],.0]
 
-    def get_xpos_xrot(self, sim):
-        xpos = []
-        xrot = []
-        for joint_id in range(self.act_dim):
-            joint = sim.model._actuator_id2name[joint_id]
-            if joint == 'j0':   
-                pos1 = sim.data.get_body_xpos('base_link')
-                mat1 = sim.data.get_body_xmat('base_link')
-            else:
-                prev_id = joint_id - 1
-                prev_joint = sim.model._actuator_id2name[prev_id]
-                pos1 = sim.data.get_site_xpos(prev_joint)
-                mat1 = sim.data.get_site_xmat(prev_joint)
-            pos2 = sim.data.get_site_xpos(joint)
-            mat2 = sim.data.get_site_xmat(joint)
-            relative_pos = pos2 - pos1
-            rot_euler = self.relative_rotation(mat1, mat2)
-            xpos.append(relative_pos)
-            xrot.append(rot_euler)
-        xpos = np.array(xpos).flatten()
-        xrot = np.array(xrot).flatten()
-        xpos = np.pad(xpos, (0, (7 - self.act_dim) * 3),
-                      mode='constant', constant_values=0)
-        xrot = np.pad(xrot, (0, (7 - self.act_dim) * 3),
-                      mode='constant', constant_values=0)
-        ref_pt_xpos = self.sim.data.get_site_xpos('ref_pt')
-        ref_pt_xmat = self.sim.data.get_site_xmat('ref_pt')
-        relative_pos = ref_pt_xpos - pos2
-        rot_euler = self.relative_rotation(mat2, ref_pt_xmat)
-        xpos = np.concatenate((xpos, relative_pos.flatten()))
-        xrot = np.concatenate((xrot, rot_euler.flatten()))
-        pos_rot = np.concatenate((xpos, xrot))
-        return pos_rot
-
-
-    def relative_rotation(self, mat1, mat2):
-        # return the euler x,y,z of the relative rotation
-        # (w.r.t site1 coordinate system) from site2 to site1
-        rela_mat = np.dot(np.linalg.inv(mat1), mat2)
-        return rotations.mat2euler(rela_mat)
+            links_r = np.array(links_r)
+            links_l = np.array(links_l)
+            return links_l, links_r
 
     def close(self):
         pass
