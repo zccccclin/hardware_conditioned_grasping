@@ -105,7 +105,7 @@ if __name__ == "__main__":
                         help='opts= 2f_1j, 2f_2j, 3f_1j, 3f_2j')
     args = parser.parse_args()
     np.random.seed(seed=args.random_seed)
-    ref_urdf = f'../assets/grippers/{args.model}.urdf'
+    ref_urdf = f'../assets/{args.model}.urdf'
     save_dir = f'../assets/gen_gripper/{args.model}'
     print('Reference file: ', os.path.abspath(ref_urdf))
     assert os.path.exists(ref_urdf)

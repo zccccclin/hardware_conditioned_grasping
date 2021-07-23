@@ -20,10 +20,10 @@ def reset(robot_id, act_joint_indices):
 def main(robot):
     p.connect(p.GUI)
     p.setAdditionalSearchPath(pybullet_data.getDataPath())
-    p.loadURDF("plane.urdf")
+    plane = p.loadURDF("plane.urdf")
     p.setGravity(0,0,-9.81)
     robot_pos = [0,0,0]
-    cube = p.loadURDF('cube_small.urdf', [.65,0,0])
+    cube = p.loadURDF('cube_small.urdf', [.65,0,0], globalScaling=1.2)
     ll = [-3.14, -3.14, -3.14, -3.14, -3.14, -3.14]
     #upper limits for null space (todo: set them to proper range)
     ul = [3.14, 0, 3.14, 3.14, 3.14, 3.14]
@@ -52,10 +52,15 @@ def main(robot):
 
     #for i in range(p.getNumJoints(robot_id)):
         #print(p.getJointInfo(robot_id, i))
-    
+    _link_name_to_index = {p.getBodyInfo(robot_id)[0].decode('UTF-8'):-1,}
+        
+    for _id in range(p.getNumJoints(robot_id)):
+        _name = p.getJointInfo(robot_id, _id)[12].decode('UTF-8')
+        _link_name_to_index[_name] = _id
+    print(_link_name_to_index)
     while simulate:
         time.sleep(0.01)
-        move_factor = 0.05
+        move_factor = 0.01
         joint_states = p.getJointStates(robot_id, act_joint_indices)
         hand_pose = list(p.getLinkState(robot_id, 7)[4])
         if keyboard.is_pressed('i') and hand_pose[0] <= .725:
@@ -78,12 +83,12 @@ def main(robot):
             desired_joint_positions = p.calculateInverseKinematics(robot_id,end_factor,hand_pose,[1,1,0,0],lowerLimits=ll, upperLimits=ul, residualThreshold=1e-5 )[:6]
             desired_joint_positions = np.concatenate([desired_joint_positions,gripper_act])
 
-        elif keyboard.is_pressed('8') and hand_pose[2] <= .3:
+        elif keyboard.is_pressed('8') and hand_pose[2] <= .8:
             hand_pose[2] += move_factor
             desired_joint_positions = p.calculateInverseKinematics(robot_id,end_factor,hand_pose,[1,1,0,0],lowerLimits=ll, upperLimits=ul, residualThreshold=1e-5 )[:6]
             desired_joint_positions = np.concatenate([desired_joint_positions,gripper_act])
 
-        elif keyboard.is_pressed('m') and hand_pose[2] >= .1:
+        elif keyboard.is_pressed('m') and hand_pose[2] >= .115:
             hand_pose[2] -= move_factor
             desired_joint_positions = p.calculateInverseKinematics(robot_id,7,hand_pose,[1,1,0,0],lowerLimits=ll, upperLimits=ul, residualThreshold=1e-5 )[:6]
             desired_joint_positions = np.concatenate([desired_joint_positions,gripper_act])
@@ -101,14 +106,20 @@ def main(robot):
             bodyIndex=robot_id,
             jointIndices=act_joint_indices,
             controlMode=p.POSITION_CONTROL,
-            targetPositions=desired_joint_positions
-            #forces=torque,
+            targetPositions=desired_joint_positions,
+            #forces=0
         )
         end_factor_pos = np.array(list(p.getLinkState(robot_id,6)[4]))
         goal = np.array(list(p.getBasePositionAndOrientation(cube)[0]))
         dist = np.linalg.norm(end_factor_pos - goal)
         #print(dist)
-        
+        print(np.linalg.norm(hand_pose[:2]-goal[:2]))
+        contact_pt = len(p.getContactPoints(robot_id, cube))
+        set1 = set({})
+        if  contact_pt != 0 :
+            for i in range(contact_pt):
+                print(f'contact {i}: ', p.getContactPoints(robot_id, cube)[i])
+        #print(p.getContactPoints(robot_id, plane))
         #print(desired_joint_positions, joint_positions)
         p.stepSimulation()
 
