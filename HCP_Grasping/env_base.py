@@ -117,7 +117,7 @@ class BaseEnv:
         robot_pose = [0,0,0]
         cube_pose = [.65, 0, 0.03]
         self.act_joint_indices = [0,1,2,3,4,5,9,11,14,16,19,21]
-
+        
         self.sim = p.loadURDF(robot_file, basePosition=robot_pose,
                               useFixedBase=1, physicsClientId=self.pc._client)
         self.sim_urdf = URDF.load(robot_file)
@@ -130,7 +130,13 @@ class BaseEnv:
         #self.tray = p.loadURDF('tray/tray.urdf', [.7, 0, 0],[0,0,1,1],useFixedBase=True,)
 
         self.cube = p.loadURDF('cube_small.urdf', cube_pose, globalScaling=1.3)
-
+        if self.with_kin:
+            links_l, links_r = self.get_link_properties()
+            self.link_prop = np.concatenate([links_l, links_r])
+            self.finger_height_offset = .1 - links_l[0] - links_l[1]
+        p.changeDynamics(self.sim, 11, lateralFriction=2.5)
+        p.changeDynamics(self.sim, 16, lateralFriction=2.5)
+        p.changeDynamics(self.sim, 21, lateralFriction=2.5)
         self.update_action_space()
 
     def test_reset(self, cond):
@@ -195,17 +201,14 @@ class BaseEnv:
         return reward, final_dist, done
 
     def get_obs(self):
-        if self.with_kin:
-            links_l, links_r = self.get_link_properties()
-            ob = np.concatenate([links_l, links_r])
-            self.finger_height_offset = .1 - links_l[0] - links_l[1]
+
         endfactor_pos  = np.array((p.getLinkState(self.sim, self.end_factor)[4]))
         joint_states = p.getJointStates(self.sim, self.act_joint_indices[6:])
         gripper_qpos = np.array([j[0] for j in joint_states])
         height_target = np.array([.65, 0,.2])
         
         ref_point = np.array(p.getBasePositionAndOrientation(self.cube)[0])
-        ob = np.concatenate([ob, gripper_qpos, endfactor_pos, ref_point, endfactor_pos, height_target])
+        ob = np.concatenate([self.link_prop, gripper_qpos, endfactor_pos, ref_point, endfactor_pos, height_target])
         ref_point = np.concatenate([endfactor_pos,ref_point])
         return ob, ref_point
 

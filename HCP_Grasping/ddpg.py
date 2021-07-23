@@ -264,6 +264,8 @@ class DDPG:
                     is_best =True
                     self.best_reward = final_r
                     print('saving model with best reward')
+                    with open('./best.json', 'w') as best:
+                        json.dump(final_r, best)
                 else:
                     is_best = False
                 self.save_model(is_best=is_best, step=self.global_step)
