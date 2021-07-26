@@ -41,6 +41,8 @@ class DDPG:
         self.closest_dist = np.inf
         self.closest_dist_reached = np.inf
         self.best_reward = -np.inf
+        self.best_reward_list = []
+        self.ep_best = -np.inf
         self.warmup_iter = args.warmup_iter
         self.max_grad_norm = args.max_grad_norm
         self.use_her = False #args.her
@@ -169,6 +171,10 @@ class DDPG:
                 obs = new_obs
             epoch_episode_rewards.append(episode_reward)
             print(episode_reward, epoch)
+            if episode_reward > self.ep_best:
+                self.ep_best = episode_reward
+                with open('./ep_best.json', 'w') as ep_best_r:
+                        json.dump(self.ep_best, ep_best_r)
             epoch_episode_steps.append(episode_step)
             if self.use_her:
                 for t in range(episode_step - self.k_future):
@@ -263,9 +269,10 @@ class DDPG:
                 if final_r > self.best_reward:
                     is_best =True
                     self.best_reward = final_r
+                    self.best_reward_list.append((f'epoch: {self.global_step}', final_r))
                     print('saving model with best reward')
                     with open('./best.json', 'w') as best:
-                        json.dump(final_r, best)
+                        json.dump(self.best_reward_list, best)
                 else:
                     is_best = False
                 self.save_model(is_best=is_best, step=self.global_step)

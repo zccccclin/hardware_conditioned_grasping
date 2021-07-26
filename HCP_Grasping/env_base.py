@@ -90,7 +90,20 @@ class BaseEnv:
             targetPositions=desired_joint_positions
             #forces=torque,
         )
-        for i in range(20):
+        for i in range(10):
+            p.stepSimulation()
+        desired_joint_positions = p.calculateInverseKinematics(
+                                            self.sim, self.end_factor,
+                                            [.65, 0, .2-self.finger_height_offset],[1,1,0,0],
+                                            lowerLimits=self.ll, upperLimits=self.ul,  residualThreshold=1e-5)[:6]
+        p.setJointMotorControlArray(
+            bodyIndex=robot_id,
+            jointIndices=act_joint_indices[:6],
+            controlMode=p.POSITION_CONTROL,
+            targetPositions=desired_joint_positions
+            #forces=torque,
+        )
+        for i in range(10):
             p.stepSimulation()
         return desired_joint_positions
 
@@ -203,6 +216,7 @@ class BaseEnv:
     def get_obs(self):
 
         endfactor_pos  = np.array((p.getLinkState(self.sim, self.end_factor)[4]))
+        endfactor_pos = endfactor_pos - np.array([0,0,self.finger_height_offset])
         joint_states = p.getJointStates(self.sim, self.act_joint_indices[6:])
         gripper_qpos = np.array([j[0] for j in joint_states])
         height_target = np.array([.65, 0,.2])
