@@ -1,8 +1,0 @@
-epoch,time_elapsed,rollout/return,total_rollout_steps,rollout/ep_steps,actor_lr,critic_lr
-,4.264172792434692,-78.74856388447664,200,200.0,0.0001,0.001
-epoch,time_elapsed,rollout/return,total_rollout_steps,rollout/ep_steps,actor_lr,critic_lr,test/total_rollout_steps,test/mean_final_dist,train/mean_final_dist,train/mean_final_dist_reached,test/succ_rate,train/succ_rate
-,4.264172792434692,-78.74856388447664,200,200.0,0.0001,0.001,,,,,,
-,,,,,,,200,0.21751000014248384,0.21751000014248384,0.15650075851548562,,
-1,17.777151346206665,-81.49086996025606,400,200.0,0.0001,0.001,,,,,,
-2,22.166289806365967,-54.640409984721074,600,200.0,0.0001,0.001,,,,,,
-3,26.71562933921814,-72.06161419029968,800,200.0,0.0001,0.001,,,,,,

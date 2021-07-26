@@ -1,11 +1,15 @@
 assets/generated/
+assets/multi_robot_gen_gripper
+assets/gen_gripper
+
 Reacher/data/
 Reacher/stats/
-assets/gen_gripper
+
 Grasping/data
 Grasping/data_backed_up
 Grasping/data_with_her
-gripper_lift/data
 Grasping/data_reached
+
 HCP_Grasping/data
+Multi_robot_HCP_Grasping/data
 
